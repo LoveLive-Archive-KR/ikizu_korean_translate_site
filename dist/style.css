@@ -249,7 +249,7 @@ h1, h2, h3 { font-weight: 700; }
   .sidebar { position: static; height: auto; overflow: visible; padding: 15px 18px 0; }
   .brand { font-size: 19px; gap: 8px; }
   .brand-icon { font-size: 30px; }
-  .brand-sub, .month-nav-heading, .aside-footer { display: none; }
+  .month-nav-heading, .aside-footer { display: none; }
   .side-start { position: absolute; top: 17px; right: 18px; width: auto; padding: 7px 12px; gap: 5px; }
   .side-start .side-start-label { font-size: 10px; }
   .side-start .side-start-icon { font-size: 13px; }
@@ -281,3 +281,5 @@ h1, h2, h3 { font-weight: 700; }
 }
 
 .period-heading{padding-bottom:20px}.period-heading h2:focus{outline:none}.calendar-title h2{margin-top:0}.post-actions{margin-top:12px}
+
+.brand{font-size:18px;gap:8px;letter-spacing:-.8px}.brand-icon{font-size:32px}.brand-sub{font-size:9px;letter-spacing:0;margin-top:4px;line-height:1.5}@media(max-width:767.98px){.brand{font-size:16px}.brand-icon{font-size:28px}.brand-sub{display:block;font-size:8px;margin-top:2px}}
