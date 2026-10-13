@@ -130,13 +130,13 @@ function card(post) {
   actions.append(share); body.append(actions); article.append(avatar,body); return article;
 }
 function buildMemberPicker() {
-  const choices = [{handle:'',name:'전체'}, ...members];
+  const choices = [{handle:'',name:'전체',avatar:'brand/ikizulive-logo.png'}, ...members];
   $('member-profiles').replaceChildren();
   for(const member of choices) {
     const button = node('button','member-button'); setPalette(button,paletteFor(member.character),'member'); button.type = 'button'; button.dataset.member = member.handle;
     button.title = member.handle ? `${member.name} (@${member.handle})` : '전체 멤버';
     button.setAttribute('aria-label', member.handle ? `${member.name}의 글 보기` : '전체 멤버의 글 보기');
-    const photo = node('span','member-photo',member.handle ? member.name.slice(0,1) : '✳');
+    const photo = node('span',member.handle ? 'member-photo' : 'member-photo member-photo-logo',member.handle ? member.name.slice(0,1) : '전체');
     if(member.avatar) { const img = node('img'); img.src = member.avatar; img.alt = ''; img.width = 36; img.height = 36; img.decoding = 'async'; img.addEventListener('error',() => img.remove(),{once:true}); photo.append(img); }
     button.append(photo,node('span','member-name',member.name));
     button.addEventListener('click',() => {

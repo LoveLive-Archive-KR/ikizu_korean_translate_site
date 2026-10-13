@@ -306,6 +306,8 @@ body{background:#fff}
 .member-button.selected .member-photo{background:var(--member-soft);color:var(--member-ink);outline-color:var(--member-ring);box-shadow:none;border-color:transparent}
 .member-button:hover .member-photo{box-shadow:none;outline-color:#cbd5de}
 .member-button.selected:hover .member-photo{outline-color:var(--member-ring)}
+.member-photo.member-photo-logo{background:#fff;font-size:11px}
+.member-photo.member-photo-logo img{object-fit:contain;padding:2px;background:#fff}
 .member-name{line-height:1.5}
 .results-line{padding-bottom:14px}
 .results-line span:first-child{color:#536471}
