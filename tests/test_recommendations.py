@@ -5,6 +5,7 @@ import sqlite3
 import unittest
 from datetime import datetime
 from pathlib import Path
+from collections import Counter
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -28,7 +29,7 @@ class RecommendationsTest(unittest.TestCase):
         self.assertEqual(rows, exported)
         self.assertEqual(len(rows), self.payload['metadata']['links'])
 
-    def test_links_have_real_targets_and_bounded_dates(self):
+    def test_links_have_real_targets_and_valid_similarity(self):
         for source, links in self.payload['byPost'].items():
             self.assertIn(source, self.posts)
             self.assertLessEqual(len(links), 3)
@@ -36,18 +37,34 @@ class RecommendationsTest(unittest.TestCase):
             for link in links:
                 self.assertIn(link['id'], self.posts)
                 self.assertNotEqual(source,link['id'])
-                delta = abs(datetime.fromisoformat(self.posts[source]['date'])-datetime.fromisoformat(self.posts[link['id']]['date']))
-                self.assertLessEqual(delta.total_seconds(),14*86400)
                 self.assertGreaterEqual(link['similarity'],self.payload['metadata']['minSimilarity'])
+
+    def test_all_recorded_months_have_recommendations(self):
+        totals = Counter(p['month'] for p in self.posts.values())
+        coverage = Counter(self.posts[source]['month'] for source in self.payload['byPost'])
+        self.assertEqual(set(totals),set(coverage))
+        for month,total in totals.items():
+            self.assertGreaterEqual(coverage[month]/total,0.5,month)
+
+    def test_candidates_cross_months_and_old_date_window(self):
+        self.assertIsNone(self.payload['metadata']['windowDays'])
+        links = self.payload['byPost']['1906681633169711221']
+        self.assertTrue(any(abs(datetime.fromisoformat(self.posts['1906681633169711221']['date'])-
+                                   datetime.fromisoformat(self.posts[link['id']]['date'])).days > 14
+                            for link in links))
 
     def test_culture_festival_quote_finds_polka_source(self):
         links = self.payload['byPost']['2096140058835513438']
         self.assertEqual(links[0]['id'],'2096139266762190890')
         self.assertIn('문화제',links[0]['reason'])
 
-    def test_environment_post_has_no_forced_unrelated_recommendation(self):
+    def test_environment_post_avoids_unrelated_party_posts(self):
         # The first loose threshold suggested an unrelated party/pastry post here.
-        self.assertNotIn('1945969510659613167',self.payload['byPost'])
+        links = self.payload['byPost']['1945969510659613167']
+        for link in links:
+            target = self.posts[link['id']]['translation']
+            self.assertNotIn('여름은 여기도 저기도 이벤트 시즌',target)
+            self.assertNotIn('이렇게 반짝거리는 사람들과 같이 SNS에서 활동',target)
 
 
 if __name__ == '__main__':

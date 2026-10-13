@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "recommendations:embed": "node scripts/embed_posts.mjs",
-    "recommendations:build": "npm run recommendations:embed && python3 scripts/build_recommendations.py"
+    "recommendations:build": "npm run recommendations:embed && node scripts/rank_posts.mjs && python3 scripts/build_recommendations.py"
   },
   "devDependencies": {
     "@huggingface/transformers": "3.8.1"

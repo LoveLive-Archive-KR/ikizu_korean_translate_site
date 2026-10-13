@@ -342,7 +342,7 @@ async function loadArchive() {
   const raw = await response.text(); const posts = JSON.parse(raw);
   // The archive works even when the optional experiment is missing or stale.
   try {
-    const response = await fetch('recommendations.json');
+    const response = await fetch('recommendations.json',{cache:'no-cache'});
     if(response.ok && crypto.subtle) {
       const payload = await response.json();
       const digest = await crypto.subtle.digest('SHA-256',new TextEncoder().encode(raw));
