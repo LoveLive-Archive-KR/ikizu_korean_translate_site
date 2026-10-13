@@ -53,6 +53,55 @@ function linkedText(text) {
   }
   fragment.append(document.createTextNode(text.slice(position))); return fragment;
 }
+function splitQuotedText(text) {
+  const lines = text.replace(/\r\n?/g,'\n').split('\n');
+  const header = /^[ \t]*>[ \t]*(?:\*\*)?@([A-Za-z0-9_]{1,15})[ \t]+(?:인용|引用)[ \t]*[:：](?:\*\*)?[ \t]*$/;
+  const prefix = /^[ \t]*>[ \t]?/;
+  const blocks = []; let plain = [];
+  const flush = () => { const value = plain.join('\n'); if(value.trim()) blocks.push({type:'text',text:value.replace(/^\n+|\n+$/g,'')}); plain = []; };
+  for(let i = 0; i < lines.length; i++) {
+    const match = lines[i].match(header);
+    if(!match || !prefix.test(lines[i+1] || '')) { plain.push(lines[i]); continue; }
+    flush(); const quoted = [];
+    while(i+1 < lines.length && prefix.test(lines[i+1])) quoted.push(lines[++i].replace(prefix,''));
+    blocks.push({type:'quote',handle:match[1],text:quoted.join('\n')});
+  }
+  flush();
+  return blocks.some(block => block.type === 'quote')?blocks:[{type:'text',text}];
+}
+function quotedPost(handle,text,parentPost) {
+  const normalize = value => value.replace(/\r\n?/g,'\n').trim();
+  const value = normalize(text);
+  const candidates = data.filter(post => post.handle.toLowerCase() === handle.toLowerCase() && post.date <= parentPost.date && post.id !== parentPost.id
+    && (normalize(post.translation) === value || normalize(post.original) === value));
+  return candidates.length === 1?candidates[0]:null;
+}
+function quoteCard(block,parentPost) {
+  const profile = members.find(member => member.handle.toLowerCase() === block.handle.toLowerCase())
+    || (block.handle.toLowerCase() === 'ikizulive_staff'?{name:'이키즈라이브!',handle:'ikizulive_staff',avatar:'avatars/ikizulive_staff.jpg'}:null);
+  const name = profile?.name || `@${block.handle}`;
+  const card = node('blockquote','quote-card'); card.setAttribute('aria-label',`${name}의 인용 게시물`);
+  const header = node('div','quote-header');
+  const avatar = node('a','quote-avatar',block.handle.slice(0,1).toUpperCase()); avatar.href = `https://x.com/${encodeURIComponent(block.handle)}`; avatar.target = '_blank'; avatar.rel = 'noopener noreferrer'; avatar.setAttribute('aria-label',`${name}의 X 프로필`);
+  if(profile?.avatar) { const image = node('img'); image.src = profile.avatar; image.alt = ''; image.width = 24; image.height = 24; image.loading = 'lazy'; image.addEventListener('error',() => image.remove(),{once:true}); avatar.append(image); }
+  const identity = node('div','quote-identity'); const author = node('a','quote-name',name); author.href = avatar.href; author.target = '_blank'; author.rel = 'noopener noreferrer'; identity.append(author);
+  if(profile) identity.append(node('span','quote-handle',`@${block.handle}`));
+  header.append(avatar,identity);
+  const source = quotedPost(block.handle,block.text,parentPost);
+  if(source) {
+    const link = node('a','quote-time'); link.href = source.url; link.target = '_blank'; link.rel = 'noopener noreferrer'; link.setAttribute('aria-label',`${name}의 인용 원글을 X에서 보기`);
+    const time = node('time','',`${source.date.slice(5,10).replace('-','.')} ${source.date.slice(11,16)} ↗`); time.dateTime = source.date; link.append(time); header.append(link);
+  }
+  const content = node('div','quote-text'); content.append(linkedText(block.text)); card.append(header,content); return card;
+}
+function formattedPostText(text,parentPost) {
+  const fragment = document.createDocumentFragment();
+  for(const block of splitQuotedText(text)) {
+    if(block.type === 'quote') fragment.append(quoteCard(block,parentPost));
+    else { const content = node('div','translation-text'); content.append(linkedText(block.text)); fragment.append(content); }
+  }
+  return fragment;
+}
 function notify(message) { clearTimeout(toastTimer); $('toast').textContent = message; $('toast').hidden = false; toastTimer = setTimeout(() => $('toast').hidden = true,3500); }
 function card(post) {
   const article = node('article','post'); setPalette(article,paletteFor(post.character),'member'); article.id = `post-${post.id}`; article.tabIndex = -1;
@@ -64,7 +113,7 @@ function card(post) {
   const time = node('time','',post.date.slice(5,10).replace('-','.') + ' ' + post.date.slice(11,16)); time.dateTime = post.date; time.title = `${post.date.slice(0,10)} (한국 시간)`;
   const dot = node('span','member-color-dot'); dot.setAttribute('aria-hidden','true');
   header.append(name,dot,node('span','account-handle',`@${post.handle}`),node('span','post-dot','·'),time);
-  const translation = node('div','translation'); translation.append(linkedText(post.translation)); body.append(header,translation);
+  const translation = node('div','translation'); translation.append(formattedPostText(post.translation,post)); body.append(header,translation);
   if(post.media.length) {
     const images = node('div','post-media');
     for(const [index,url] of post.media.entries()) {
@@ -73,7 +122,7 @@ function card(post) {
     }
     body.append(images);
   }
-  const details = node('details'); details.append(node('summary','','일본어 원문 보기')); const original = node('div','original'); original.lang = 'ja'; original.append(linkedText(post.original)); details.append(original); body.append(details);
+  const details = node('details'); details.append(node('summary','','일본어 원문 보기')); const original = node('div','original'); original.lang = 'ja'; original.append(formattedPostText(post.original,post)); details.append(original); body.append(details);
   const actions = node('div','post-actions'); if(post.corrected) actions.append(node('span','translation-badge corrected','수정 번역'));
   const source = node('a'); source.href = post.url; source.target = '_blank'; source.rel = 'noopener noreferrer'; source.append(icon('external'),document.createTextNode('X에서 보기')); actions.append(source);
   const share = node('button'); share.type = 'button'; share.append(icon('link'),document.createTextNode('링크 복사')); share.setAttribute('aria-label',`${post.name}의 게시물 링크 복사`);

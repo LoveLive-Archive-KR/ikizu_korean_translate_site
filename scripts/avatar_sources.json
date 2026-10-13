@@ -38,5 +38,9 @@
   "ShaunTheBunny": {
     "avatar": "avatars/ShaunTheBunny.png",
     "avatarSource": "https://unavatar.io/twitter/ShaunTheBunny"
+  },
+  "ikizulive_staff": {
+    "avatar": "avatars/ikizulive_staff.jpg",
+    "avatarSource": "https://unavatar.io/twitter/ikizulive_staff"
   }
 }
