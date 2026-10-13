@@ -16,7 +16,6 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,su
 .brand:hover{text-decoration:none}
 .brand-icon{font-size:43px;font-weight:400;color:var(--green)}
 .brand-sub{display:block;font-size:8px;font-weight:500;letter-spacing:1.5px;margin-top:3px;color:var(--muted)}
-.side-heading{font-size:11px;color:var(--muted);margin:19px 0 24px}
 .side-start{display:flex;align-items:center;gap:12px;width:100%;background:var(--ink);color:white;border:0;padding:13px 17px;border-radius:30px;font-size:13px;font-weight:600}
 .side-start:hover:not(:disabled){background:#344453}
 .side-start span{font-size:19px}
@@ -43,9 +42,6 @@ h1{font-size:21px;letter-spacing:-.8px;margin:5px 0 0;display:flex;align-items:c
 .period-heading h2{font-size:23px;letter-spacing:-.8px;margin:5px 0 0;scroll-margin-top:110px}
 .period-arrows{display:flex;gap:6px}
 .period-arrows button,.calendar-navigation button{border:1px solid var(--line);border-radius:50%;width:30px;height:30px;background:white;font-size:22px;line-height:1}
-.date-jump{display:flex;align-items:center;gap:10px;margin:0 22px 16px;font-size:10px;color:var(--muted);flex-wrap:wrap}
-.date-jump input{padding:5px 7px;background:#f6f8fa;border:0;border-radius:5px;font-size:11px;color:#536471;min-width:0;color-scheme:light}
-#period-help{font-size:9px;line-height:1.6}
 .toolbar{display:flex;align-items:center;gap:7px;padding:0 22px 14px;flex-wrap:wrap}
 .search-wrap{display:flex;align-items:center;gap:8px;padding:10px 13px;background:#f3f6f8;border:1px solid transparent;border-radius:25px;flex:1;min-width:150px}
 .search-wrap:focus-within{border-color:var(--blue);background:white}
@@ -118,11 +114,6 @@ footer a{color:var(--muted)}
 .calendar-legend{display:flex;justify-content:space-between;margin-top:17px;gap:8px;font-size:8px;color:var(--muted)}
 .calendar-legend i{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--blue);margin-right:4px}
 .calendar-month-view{display:block;width:100%;background:white;border:1px solid var(--line);border-radius:20px;padding:10px;margin-top:15px;font-size:11px;color:var(--blue)}
-.calendar-hint{text-align:center;color:var(--muted);font-size:8px;line-height:1.8;margin:10px 0 0}
-.reading-note{position:relative;border:1px solid var(--line);margin-top:18px;border-radius:16px;padding:20px 17px;overflow:hidden}
-.reading-note h3{font-size:18px;margin:10px 0}
-.reading-note p{font-size:10px;color:var(--muted);line-height:2;position:relative;z-index:1}
-.note-flower{position:absolute;right:12px;bottom:-10px;font-size:70px;color:#eaf3e9}
 .toast{position:fixed;bottom:25px;left:50%;transform:translateX(-50%);padding:12px 20px;background:var(--ink);color:white;border-radius:25px;font-size:12px;z-index:10;max-width:90vw;text-align:center}
 .toast[hidden]{display:none}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}
@@ -161,7 +152,6 @@ main{background:#fff}
 .side-start{background:var(--brand-blue);color:#132d41;border:1px solid #1384bf;box-shadow:0 3px 0 #d5eafa}
 .side-start:hover:not(:disabled){background:#49b1e6}
 .side-start span{color:#fff}
-.side-heading{color:#567f99}
 .feed-header{padding-top:24px;background:linear-gradient(105deg,#ffffffef,#f1faffee)}
 .palette-ribbon{position:absolute;left:0;right:0;top:0;height:4px;display:flex;gap:1px;background:#dde6ed}
 .palette-ribbon span{flex:1}
@@ -173,7 +163,6 @@ main{background:#fff}
 .month-button.active span{color:var(--accent-ink)}
 .period-heading{background:linear-gradient(110deg,var(--accent-soft),#fff 90%)}
 .calendar-card{background:linear-gradient(145deg,var(--accent-soft),#fff);border-color:color-mix(in srgb,var(--accent-ring) 24%,#e7edf2)}
-.calendar-title .eyebrow{color:var(--accent-ink)}
 .calendar-day.has-records{background:#ffffffde;box-shadow:inset 0 -2px color-mix(in srgb,var(--accent-ring) 45%,transparent)}
 .calendar-day.selected{background:var(--accent-color);color:var(--accent-onColor);outline:1px solid var(--accent-ring)}
 .calendar-day.selected .day-count{color:var(--accent-onColor)}
@@ -192,9 +181,6 @@ main{background:#fff}
 .member-color-dot{height:6px;width:6px;border-radius:50%;background:var(--member-color);border:1px solid color-mix(in srgb,var(--member-ink) 28%,var(--member-color));align-self:center;flex-shrink:0;margin-right:2px}
 .post:hover{background:color-mix(in srgb,var(--member-soft) 30%,white)}
 .translation a,.original a,.post summary{color:#176a98}
-.reading-note{border-top:3px solid var(--brand-orange);background:linear-gradient(135deg,#fff6ec,#fff 75%)}
-.reading-note .eyebrow{color:#995019}
-.note-flower{color:#ffdfc4}
 .search-wrap{background:#f1f7fa}
 .member-picker-heading strong{color:var(--accent-ink)}
 #calendar-toggle{border-color:color-mix(in srgb,var(--accent-ring) 30%,#e7edf2);color:var(--accent-ink)}
@@ -223,7 +209,6 @@ h1, h2, h3 { font-weight: 700; }
 .view-tabs .nav-link:hover { background: #f5f9fc; }
 .period-arrows.btn-group { gap: 6px; }
 .period-arrows.btn-group > button { border-radius: 50%; }
-.date-jump .form-control { width: 145px; line-height: 1.5; }
 .search-wrap .form-control { padding: 0; height: auto; min-height: 0; border-radius: 0; box-shadow: none; line-height: 1.7; }
 .toolbar .form-select { width: 110px; font-size: 11px; padding: 9px 28px 9px 12px; }
 #calendar-toggle { --bs-btn-active-border-color: var(--accent-ring); --bs-btn-active-color: var(--accent-ink); }
@@ -234,8 +219,6 @@ h1, h2, h3 { font-weight: 700; }
 .calendar-title h2 { line-height: 1.5; }
 .calendar-navigation label { min-width: 0; margin: 0; }
 .calendar-navigation input { width: 100%; max-width: 190px; }
-.calendar-hint { margin-bottom: 0; }
-.reading-note.card { display: block; }
 #calendar-close { white-space: nowrap; }
 .member-picker { margin-bottom: 0; }
 .post-header { line-height: 1.5; }
@@ -249,7 +232,7 @@ h1, h2, h3 { font-weight: 700; }
 @media (min-width: 768px) and (max-width: 1199.98px) {
   .sidebar { padding: 26px 14px; }
   .brand { justify-content: center; }
-  .brand-text, .side-heading, .side-start-label, .month-nav-heading strong, .aside-footer { display: none; }
+  .brand-text, .side-start-label, .month-nav-heading strong, .aside-footer { display: none; }
   .brand-icon { font-size: 40px; }
   .side-start { margin-top: 24px; padding: 12px; }
   .month-nav-heading { justify-content: center; margin-top: 25px; }
@@ -260,14 +243,13 @@ h1, h2, h3 { font-weight: 700; }
   #calendar-toggle { display: flex; }
   .calendar-symbol { display: none; }
   #calendar-close { display: block; }
-  .calendar-panel .reading-note { display: none; }
   .calendar-panel > .offcanvas-body { overflow-y: auto; }
 }
 @media (max-width: 767.98px) {
   .sidebar { position: static; height: auto; overflow: visible; padding: 15px 18px 0; }
   .brand { font-size: 19px; gap: 8px; }
   .brand-icon { font-size: 30px; }
-  .brand-sub, .side-heading, .month-nav-heading, .aside-footer { display: none; }
+  .brand-sub, .month-nav-heading, .aside-footer { display: none; }
   .side-start { position: absolute; top: 17px; right: 18px; width: auto; padding: 7px 12px; gap: 5px; }
   .side-start .side-start-label { font-size: 10px; }
   .side-start .side-start-icon { font-size: 13px; }
@@ -280,8 +262,6 @@ h1, h2, h3 { font-weight: 700; }
   .feed-header .eyebrow { font-size: 7px; }
   .period-heading { padding: 20px 18px 13px; }
   .period-heading h2 { font-size: 22px; scroll-margin-top: 95px; }
-  .date-jump { margin-left: 18px; margin-right: 18px; }
-  .date-jump #period-help { flex-basis: 100%; }
   .toolbar { padding-left: 18px; padding-right: 18px; }
   .search-wrap { flex-basis: 100%; }
   .toolbar .form-select { margin-left: auto; }
@@ -299,3 +279,5 @@ h1, h2, h3 { font-weight: 700; }
   .more { width: calc(100% - 36px); margin-left: 18px; margin-right: 18px; }
   .view-tabs button { padding: 14px 8px; }
 }
+
+.period-heading{padding-bottom:20px}.period-heading h2:focus{outline:none}.calendar-title h2{margin-top:0}.post-actions{margin-top:12px}
