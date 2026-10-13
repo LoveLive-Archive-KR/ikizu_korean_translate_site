@@ -10,6 +10,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 DAY = 86400
+WINDOW_DAYS = 14
 MIN_SIMILARITY = 0.90
 TOPICS = {
     "문화제": ("문화제", "文化祭"), "연습": ("연습", "練習"),
@@ -70,7 +71,7 @@ def build():
             j = indices[neighbor['id']]
             target = posts[j]
             gap = abs(times[i] - times[j])
-            if i == j:
+            if i == j or gap > WINDOW_DAYS * DAY:
                 continue
             if len(clean(target["translation"] or target["original"])) < 6:
                 continue
@@ -93,7 +94,7 @@ def build():
                 reason = f'{sorted(shared_topics)[0]} 언급 · 내용 의미가 비슷함'
             else:
                 reason = '내용 의미가 비슷함'
-            reason += (' · 같은 날' if same_day else f' · {max(1, math.ceil(gap/DAY))}일 이내') if near else ' · 다른 시기의 글'
+            reason += ' · 같은 날' if same_day else f' · {max(1, math.ceil(gap/DAY))}일 이내'
             score = similarity + 0.018*math.exp(-gap/(2*DAY)) + (0.008 if not same_author else 0)
             score += (0.008 if shared_tags else 0.004 if shared_topics else 0) + min(len(shared_grams),3)*0.002
             candidates.append((score, target, similarity, reason))
@@ -115,9 +116,9 @@ def build():
     metadata = {
         "schemaVersion": 1, "model": embeddings["model"], "revision": embeddings["revision"],
         "dtype": embeddings["dtype"], "sourceSha256": fingerprint,
-        "generatedAt": datetime.now(timezone.utc).isoformat(), "algorithm": "semantic-global-context-v2",
-        "minSimilarity": MIN_SIMILARITY, "windowDays": None,
-        "globalAnchoredMinSimilarity": 0.90, "unanchoredMinSimilarity": 0.92,
+        "generatedAt": datetime.now(timezone.utc).isoformat(), "algorithm": "semantic-14day-context-v3",
+        "minSimilarity": MIN_SIMILARITY, "windowDays": WINDOW_DAYS,
+        "anchoredMinSimilarity": 0.90, "unanchoredMinSimilarity": 0.92,
         "nearbyDays": 7, "maxSimilarityDrop": 0.025,
         "preprocessingVersion": embeddings['preprocessingVersion'],
         "sourcePosts": len(posts), "links": len(rows),

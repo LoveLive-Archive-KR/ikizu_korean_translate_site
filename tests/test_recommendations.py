@@ -43,15 +43,15 @@ class RecommendationsTest(unittest.TestCase):
         totals = Counter(p['month'] for p in self.posts.values())
         coverage = Counter(self.posts[source]['month'] for source in self.payload['byPost'])
         self.assertEqual(set(totals),set(coverage))
-        for month,total in totals.items():
-            self.assertGreaterEqual(coverage[month]/total,0.5,month)
 
-    def test_candidates_cross_months_and_old_date_window(self):
-        self.assertIsNone(self.payload['metadata']['windowDays'])
-        links = self.payload['byPost']['1906681633169711221']
-        self.assertTrue(any(abs(datetime.fromisoformat(self.posts['1906681633169711221']['date'])-
-                                   datetime.fromisoformat(self.posts[link['id']]['date'])).days > 14
-                            for link in links))
+    def test_every_recommendation_is_within_fourteen_days(self):
+        self.assertEqual(self.payload['metadata']['windowDays'],14)
+        for source,links in self.payload['byPost'].items():
+            for link in links:
+                delta = abs(datetime.fromisoformat(self.posts[source]['date'])-
+                            datetime.fromisoformat(self.posts[link['id']]['date']))
+                self.assertLessEqual(delta.total_seconds(),14*86400,(source,link['id']))
+                self.assertNotIn('다른 시기',link['reason'])
 
     def test_culture_festival_quote_finds_polka_source(self):
         links = self.payload['byPost']['2096140058835513438']

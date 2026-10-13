@@ -115,12 +115,14 @@ function recommendationPanel(post) {
   const seen = new Set();
   const valid = entries.filter(entry => {
     if(!entry || typeof entry.id !== 'string' || typeof entry.reason !== 'string' || entry.id === post.id || seen.has(entry.id) || !postIndex.has(entry.id)) return false;
+    const gap = Math.abs(Date.parse(post.date)-Date.parse(postIndex.get(entry.id).date));
+    if(!Number.isFinite(gap) || gap > 14*86400000) return false;
     seen.add(entry.id); return true;
   }).slice(0,3);
   if(!valid.length) return null;
   const details = node('details','ai-recommendations');
   const summary = node('summary'); summary.append(node('span','ai-label','AI 추천'),node('span','ai-count',`${valid.length}개 · 실험`));
-  const explanation = node('p','ai-explanation','내용과 게시 시점을 비교한 추천이에요. 실제 답글 관계를 뜻하지는 않아요.');
+  const explanation = node('p','ai-explanation','게시일 차이가 14일 이내인 글 중에서 고른 추천이에요. 실제 답글 관계를 뜻하지는 않아요.');
   const list = node('ul','ai-list');
   for(const entry of valid) {
     const target = postIndex.get(entry.id); const item = node('li');
@@ -347,7 +349,7 @@ async function loadArchive() {
       const payload = await response.json();
       const digest = await crypto.subtle.digest('SHA-256',new TextEncoder().encode(raw));
       const fingerprint = Array.from(new Uint8Array(digest),value => value.toString(16).padStart(2,'0')).join('');
-      if(payload.metadata?.schemaVersion === 1 && payload.metadata.sourceSha256 === fingerprint && payload.byPost && typeof payload.byPost === 'object') recommendations = payload.byPost;
+      if(payload.metadata?.schemaVersion === 1 && payload.metadata.windowDays === 14 && payload.metadata.sourceSha256 === fingerprint && payload.byPost && typeof payload.byPost === 'object') recommendations = payload.byPost;
     }
   } catch { /* Recommendations never prevent the timeline from loading. */ }
   return posts;
