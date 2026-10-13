@@ -15,6 +15,16 @@ const memberPalette = {
   YUKURI:'#b2f9fe', MIRACLE:'#ffb7f1', SHION:'#ffffff', AURORA:'#fe589e',
   NORIKO:'#ca96ff', MIDORI:'#16b500'
 };
+// Korean renderings of verified X display names; originals/sources are recorded
+// in scripts/display_name_sources.json. Compact member-picker labels stay short.
+const memberDisplayNames = {
+  polka_lion:'타카하시 폴카@살기힘든부!', My_Mai_Eld:'아자부 마이@살기힘든부!',
+  G_Akky304250:'고토 아키라@살기힘든부!', hanabistarmine:'코마가타 하나비@살기힘든부!',
+  Yukuri_talk:'하루미야 유쿠리@살기힘든부!', MiracleGoldSP:'카나자와 미라클@살기힘든부!',
+  ShaunTheBunny:'사사키 시온@살기힘든부!', Rollie_twinkle:'코노하나 오로라@살기힘든부!',
+  Noricco_U:'쵸후 노리코@살기힘든부!', LittlegreenCom:'야마다 미도리@살기힘든부!'
+};
+function displayNameFor(profile) { return memberDisplayNames[profile.handle] || profile.name || `@${profile.handle}`; }
 function rgb(hex) { return hex.slice(1).match(/../g).map(v => parseInt(v,16)); }
 function hex(values) { return '#'+values.map(v => Math.round(v).toString(16).padStart(2,'0')).join(''); }
 function luminance(color) { const [r,g,b] = rgb(color).map(v => { v /= 255; return v <= .04045 ? v/12.92 : ((v+.055)/1.055)**2.4; }); return .2126*r+.7152*g+.0722*b; }
@@ -81,7 +91,7 @@ function quotedPost(handle,text,parentPost) {
 function quoteCard(block,parentPost) {
   const profile = members.find(member => member.handle.toLowerCase() === block.handle.toLowerCase())
     || (block.handle.toLowerCase() === 'ikizulive_staff'?{name:'이키즈라이브!',handle:'ikizulive_staff',avatar:'avatars/ikizulive_staff.jpg'}:null);
-  const name = profile?.name || `@${block.handle}`;
+  const name = profile?displayNameFor(profile):`@${block.handle}`;
   const card = node('blockquote','quote-card'); card.setAttribute('aria-label',`${name}의 인용 게시물`);
   const header = node('div','quote-header');
   const avatar = node('a','quote-avatar',block.handle.slice(0,1).toUpperCase()); avatar.href = `https://x.com/${encodeURIComponent(block.handle)}`; avatar.target = '_blank'; avatar.rel = 'noopener noreferrer'; avatar.setAttribute('aria-label',`${name}의 X 프로필`);
@@ -128,11 +138,11 @@ function recommendationPanel(post) {
   for(const entry of valid) {
     const target = postIndex.get(entry.id); const item = node('li');
     const link = node('a','ai-post-link'); link.href = postLink(target);
-    link.setAttribute('aria-label',`${target.name} · ${target.date.slice(0,10)} ${target.date.slice(11,16)} · ${entry.reason}`);
+    link.setAttribute('aria-label',`${displayNameFor(target)} · ${target.date.slice(0,10)} ${target.date.slice(11,16)} · ${entry.reason}`);
     const header = node('span','ai-post-header');
     if(target.avatar) { const image = node('img','ai-avatar'); image.src = target.avatar; image.alt = ''; image.width = 24; image.height = 24; image.loading = 'lazy'; header.append(image); }
     const time = node('time','',`${target.date.slice(0,10).replaceAll('-','.')} ${target.date.slice(11,16)}`); time.dateTime = target.date;
-    header.append(node('strong','',target.name),time);
+    header.append(node('strong','',displayNameFor(target)),time);
     const text = (target.translation || target.original).replace(/\s+/g,' ').trim();
     link.append(header,node('span','ai-preview',text.length > 120?text.slice(0,120)+'…':text),node('span','ai-reason',entry.reason+' →'));
     item.append(link); list.append(item);
@@ -141,11 +151,12 @@ function recommendationPanel(post) {
 }
 function card(post) {
   const article = node('article','post'); setPalette(article,paletteFor(post.character),'member'); article.id = `post-${post.id}`; article.tabIndex = -1;
-  article.setAttribute('aria-label',`${post.date.slice(0,10)} ${post.date.slice(11,16)} ${post.name}의 기록`);
-  const avatar = node('a','avatar-link',(post.name || post.handle).slice(0,1)); avatar.href = `https://x.com/${encodeURIComponent(post.handle)}`; avatar.target = '_blank'; avatar.rel = 'noopener noreferrer'; avatar.setAttribute('aria-label',`${post.name}의 X 프로필`);
-  if(post.avatar) { const img = node('img','avatar'); img.src = post.avatar; img.alt = `${post.name} 프로필 사진`; img.width = 42; img.height = 42; img.loading = 'lazy'; img.addEventListener('error',() => img.remove(),{once:true}); avatar.append(img); }
+  const displayName = displayNameFor(post);
+  article.setAttribute('aria-label',`${post.date.slice(0,10)} ${post.date.slice(11,16)} ${displayName}의 기록`);
+  const avatar = node('a','avatar-link',(post.name || post.handle).slice(0,1)); avatar.href = `https://x.com/${encodeURIComponent(post.handle)}`; avatar.target = '_blank'; avatar.rel = 'noopener noreferrer'; avatar.setAttribute('aria-label',`${displayName}의 X 프로필`);
+  if(post.avatar) { const img = node('img','avatar'); img.src = post.avatar; img.alt = `${displayName} 프로필 사진`; img.width = 42; img.height = 42; img.loading = 'lazy'; img.addEventListener('error',() => img.remove(),{once:true}); avatar.append(img); }
   const body = node('div','post-body'); const header = node('div','post-header');
-  const name = node('a','account-name',post.name); name.href = avatar.href; name.target = '_blank'; name.rel = 'noopener noreferrer';
+  const name = node('a','account-name',displayName); name.href = avatar.href; name.target = '_blank'; name.rel = 'noopener noreferrer';
   const time = node('time','',post.date.slice(5,10).replace('-','.') + ' ' + post.date.slice(11,16)); time.dateTime = post.date; time.title = `${post.date.slice(0,10)} (한국 시간)`;
   const dot = node('span','member-color-dot'); dot.setAttribute('aria-hidden','true');
   header.append(name,dot,node('span','account-handle',`@${post.handle}`),node('span','post-dot','·'),time);
@@ -172,7 +183,7 @@ function buildMemberPicker() {
   $('member-profiles').replaceChildren();
   for(const member of choices) {
     const button = node('button','member-button'); setPalette(button,paletteFor(member.character),'member'); button.type = 'button'; button.dataset.member = member.handle;
-    button.title = member.handle ? `${member.name} (@${member.handle})` : '전체 멤버';
+    button.title = member.handle ? `${displayNameFor(member)} (@${member.handle})` : '전체 멤버';
     button.setAttribute('aria-label', member.handle ? `${member.name}의 글 보기` : '전체 멤버의 글 보기');
     const photo = node('span',member.handle ? 'member-photo' : 'member-photo member-photo-logo',member.handle ? member.name.slice(0,1) : '전체');
     if(member.avatar) { const img = node('img'); img.src = member.avatar; img.alt = ''; img.width = 36; img.height = 36; img.decoding = 'async'; img.addEventListener('error',() => img.remove(),{once:true}); photo.append(img); }
@@ -205,7 +216,7 @@ function matches(post,includePeriod = true) {
   const query = $('search').value.trim().toLocaleLowerCase();
   return (!includePeriod || mode === 'all' || (mode === 'day' ? post.date.slice(0,10) === selectedDay : post.month === selected))
     && (!selectedMembers.size || selectedMembers.has(post.handle))
-    && (!query || `${post.name}\n${post.handle}\n${post.translation}\n${post.original}`.toLocaleLowerCase().includes(query));
+    && (!query || `${post.name}\n${displayNameFor(post)}\n${post.handle}\n${post.translation}\n${post.original}`.toLocaleLowerCase().includes(query));
 }
 function firstDay(month) { return data.find(p => p.month === month && matches(p,false))?.date.slice(0,10) || month+'-01'; }
 function focusArchive() { $('month-title').focus({preventScroll:true}); $('month-title').scrollIntoView({block:'start',behavior:'instant'}); }

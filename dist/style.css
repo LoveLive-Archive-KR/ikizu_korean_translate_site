@@ -62,7 +62,7 @@ h1{font-size:21px;letter-spacing:-.8px;margin:5px 0 0;display:flex;align-items:c
 .avatar{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .post-body{min-width:0}
 .post-header{display:flex;align-items:baseline;gap:5px;min-width:0;flex-wrap:wrap;line-height:1.5;margin-bottom:8px}
-.account-name{font-size:13px;font-weight:700}
+.account-name{font-size:13px;font-weight:700;min-width:0;overflow-wrap:anywhere}
 .account-handle,.post-header time,.post-dot{font-size:10px;color:var(--muted)}
 .post-header time{white-space:nowrap}
 .post-menu{margin-left:auto;color:#a1adb6;font-size:13px;line-height:1}

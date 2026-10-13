@@ -1,0 +1,66 @@
+{
+  "verifiedAt": "2026-10-13",
+  "note": "Korean translations of X author_name values verified via official oEmbed responses; current snapshot, not per-post historical names.",
+  "members": {
+    "Rollie_twinkle": {
+      "original": "此花輝夜@いきづらい部！",
+      "displayName": "코노하나 오로라@살기힘든부!",
+      "source": "https://publish.twitter.com/oembed?url=https%3A%2F%2Fx.com%2FRollie_twinkle%2Fstatus%2F2100924044942197160&omit_script=true",
+      "tweetUrl": "https://x.com/Rollie_twinkle/status/2100924044942197160"
+    },
+    "LittlegreenCom": {
+      "original": "山田真緑@いきづらい部！",
+      "displayName": "야마다 미도리@살기힘든부!",
+      "source": "https://publish.twitter.com/oembed?url=https%3A%2F%2Fx.com%2FLittlegreenCom%2Fstatus%2F2100714665365909673&omit_script=true",
+      "tweetUrl": "https://x.com/LittlegreenCom/status/2100714665365909673"
+    },
+    "My_Mai_Eld": {
+      "original": "麻布麻衣@いきづらい部！",
+      "displayName": "아자부 마이@살기힘든부!",
+      "source": "https://publish.twitter.com/oembed?url=https%3A%2F%2Fx.com%2FMy_Mai_Eld%2Fstatus%2F2100575246742917183&omit_script=true",
+      "tweetUrl": "https://x.com/My_Mai_Eld/status/2100575246742917183"
+    },
+    "polka_lion": {
+      "original": "高橋ポルカ@いきづらい部！",
+      "displayName": "타카하시 폴카@살기힘든부!",
+      "source": "https://publish.twitter.com/oembed?url=https%3A%2F%2Fx.com%2Fpolka_lion%2Fstatus%2F2100482384437338424&omit_script=true",
+      "tweetUrl": "https://x.com/polka_lion/status/2100482384437338424"
+    },
+    "Yukuri_talk": {
+      "original": "春宮ゆくり@いきづらい部！",
+      "displayName": "하루미야 유쿠리@살기힘든부!",
+      "source": "https://publish.twitter.com/oembed?url=https%3A%2F%2Fx.com%2FYukuri_talk%2Fstatus%2F2100113453436530841&omit_script=true",
+      "tweetUrl": "https://x.com/Yukuri_talk/status/2100113453436530841"
+    },
+    "ShaunTheBunny": {
+      "original": "佐々木翔音@いきづらい部！",
+      "displayName": "사사키 시온@살기힘든부!",
+      "source": "https://publish.twitter.com/oembed?url=https%3A%2F%2Fx.com%2FShaunTheBunny%2Fstatus%2F2100037201060843887&omit_script=true",
+      "tweetUrl": "https://x.com/ShaunTheBunny/status/2100037201060843887"
+    },
+    "G_Akky304250": {
+      "original": "五桐 玲@いきづらい部！",
+      "displayName": "고토 아키라@살기힘든부!",
+      "source": "https://publish.twitter.com/oembed?url=https%3A%2F%2Fx.com%2FG_Akky304250%2Fstatus%2F2099771953464726015&omit_script=true",
+      "tweetUrl": "https://x.com/G_Akky304250/status/2099771953464726015"
+    },
+    "hanabistarmine": {
+      "original": "駒形花火@いきづらい部！",
+      "displayName": "코마가타 하나비@살기힘든부!",
+      "source": "https://publish.twitter.com/oembed?url=https%3A%2F%2Fx.com%2Fhanabistarmine%2Fstatus%2F2099753330507501903&omit_script=true",
+      "tweetUrl": "https://x.com/hanabistarmine/status/2099753330507501903"
+    },
+    "Noricco_U": {
+      "original": "調布のりこ@いきづらい部！",
+      "displayName": "쵸후 노리코@살기힘든부!",
+      "source": "https://publish.twitter.com/oembed?url=https%3A%2F%2Fx.com%2FNoricco_U%2Fstatus%2F2099429698124349783&omit_script=true",
+      "tweetUrl": "https://x.com/Noricco_U/status/2099429698124349783"
+    },
+    "MiracleGoldSP": {
+      "original": "金澤奇跡@いきづらい部！",
+      "displayName": "카나자와 미라클@살기힘든부!",
+      "source": "https://publish.twitter.com/oembed?url=https%3A%2F%2Fx.com%2FMiracleGoldSP%2Fstatus%2F2099416360442790247&omit_script=true",
+      "tweetUrl": "https://x.com/MiracleGoldSP/status/2099416360442790247"
+    }
+  }
+}
