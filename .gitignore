@@ -1,0 +1,4 @@
+messages.db
+messages.db-*
+*.tar.gz
+.DS_Store
