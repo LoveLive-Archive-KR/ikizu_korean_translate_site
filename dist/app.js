@@ -7,12 +7,13 @@ let calendarFocusTarget = null;
 let selectedMembers = new Set(), members = [];
 let recommendations = {}, postIndex = new Map();
 function chosenMembers() { return members.filter(member => selectedMembers.has(member.handle)); }
-// Sampled profile backgrounds. Shion's white uses a visible neutral outline.
+// Member image colors from each Namu Wiki profile (see palette_sources.json).
+// Shion's white uses a visible neutral outline; text colors preserve contrast.
 const brandPalette = {color:'#239fde', orange:'#ed6d00'};
 const memberPalette = {
-  POLKA:'#ffff66', MAI:'#4d93d9', AKIRA:'#b5e6a2', HANABI:'#ff4747',
-  YUKURI:'#c0e6f5', MIRACLE:'#ffb6c1', SHION:'#ffffff', AURORA:'#ff5b9d',
-  NORIKO:'#cc66ff', MIDORI:'#3fbf7f'
+  POLKA:'#fbe167', MAI:'#009fdf', AKIRA:'#bdedad', HANABI:'#ff2021',
+  YUKURI:'#b2f9fe', MIRACLE:'#ffb7f1', SHION:'#ffffff', AURORA:'#fe589e',
+  NORIKO:'#ca96ff', MIDORI:'#16b500'
 };
 function rgb(hex) { return hex.slice(1).match(/../g).map(v => parseInt(v,16)); }
 function hex(values) { return '#'+values.map(v => Math.round(v).toString(16).padStart(2,'0')).join(''); }

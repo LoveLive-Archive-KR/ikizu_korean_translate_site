@@ -7,45 +7,85 @@
   },
   "members": {
     "POLKA": {
-      "color": "#ffff66",
-      "source": "https://unavatar.io/twitter/polka_lion"
+      "color": "#fbe167",
+      "colorName": "럭키 옐로우",
+      "source": "https://namu.wiki/w/%ED%83%80%EC%B9%B4%ED%95%98%EC%8B%9C%20%ED%8F%B4%EC%B9%B4",
+      "verifiedVia": "https://d.namu.moe/w/%ED%83%80%EC%B9%B4%ED%95%98%EC%8B%9C%20%ED%8F%B4%EC%B9%B4",
+      "section": "이미지 컬러",
+      "verifiedAt": "2026-10-13"
     },
     "MAI": {
-      "color": "#4d93d9",
-      "source": "https://unavatar.io/twitter/My_Mai_Eld"
+      "color": "#009fdf",
+      "colorName": "로지컬 블루",
+      "source": "https://namu.wiki/w/%EC%95%84%EC%9E%90%EB%B6%80%20%EB%A7%88%EC%9D%B4",
+      "verifiedVia": "https://d.namu.moe/w/%EC%95%84%EC%9E%90%EB%B6%80%20%EB%A7%88%EC%9D%B4",
+      "section": "이미지 컬러",
+      "verifiedAt": "2026-10-13"
     },
     "AKIRA": {
-      "color": "#b5e6a2",
-      "source": "https://unavatar.io/twitter/G_Akky304250"
+      "color": "#bdedad",
+      "colorName": "산들바람색",
+      "source": "https://namu.wiki/w/%EA%B3%A0%ED%86%A0%20%EC%95%84%ED%82%A4%EB%9D%BC%28%EB%9F%AC%EB%B8%8C%20%EB%9D%BC%EC%9D%B4%EB%B8%8C%21%29",
+      "verifiedVia": "https://d.namu.moe/w/%EA%B3%A0%ED%86%A0%20%EC%95%84%ED%82%A4%EB%9D%BC%28%EB%9F%AC%EB%B8%8C%20%EB%9D%BC%EC%9D%B4%EB%B8%8C%21%29",
+      "section": "이미지 컬러",
+      "verifiedAt": "2026-10-13"
     },
     "HANABI": {
-      "color": "#ff4747",
-      "source": "https://unavatar.io/twitter/hanabistarmine"
+      "color": "#ff2021",
+      "colorName": "홍모란",
+      "source": "https://namu.wiki/w/%EC%BD%94%EB%A7%88%EA%B0%80%ED%83%80%20%ED%95%98%EB%82%98%EB%B9%84",
+      "verifiedVia": "https://d.namu.moe/w/%EC%BD%94%EB%A7%88%EA%B0%80%ED%83%80%20%ED%95%98%EB%82%98%EB%B9%84",
+      "section": "이미지 컬러",
+      "verifiedAt": "2026-10-13"
     },
     "YUKURI": {
-      "color": "#c0e6f5",
-      "source": "https://unavatar.io/twitter/Yukuri_talk"
+      "color": "#b2f9fe",
+      "colorName": "스완 블루",
+      "source": "https://namu.wiki/w/%ED%95%98%EB%A3%A8%EB%AF%B8%EC%95%BC%20%EC%9C%A0%EC%BF%A0%EB%A6%AC",
+      "verifiedVia": "https://d.namu.moe/w/%ED%95%98%EB%A3%A8%EB%AF%B8%EC%95%BC%20%EC%9C%A0%EC%BF%A0%EB%A6%AC",
+      "section": "이미지 컬러",
+      "verifiedAt": "2026-10-13"
     },
     "MIRACLE": {
-      "color": "#ffb6c1",
-      "source": "https://unavatar.io/twitter/MiracleGoldSP"
+      "color": "#ffb7f1",
+      "colorName": "드리미 핑크",
+      "source": "https://namu.wiki/w/%EC%B9%B4%EB%82%98%EC%9E%90%EC%99%80%20%EB%AF%B8%EB%9D%BC%ED%81%B4",
+      "verifiedVia": "https://d.namu.moe/w/%EC%B9%B4%EB%82%98%EC%9E%90%EC%99%80%20%EB%AF%B8%EB%9D%BC%ED%81%B4",
+      "section": "이미지 컬러",
+      "verifiedAt": "2026-10-13"
     },
     "SHION": {
       "color": "#ffffff",
-      "source": "https://unavatar.io/twitter/ShaunTheBunny"
+      "colorName": "노이지 화이트",
+      "source": "https://namu.wiki/w/%EC%82%AC%EC%82%AC%ED%82%A4%20%EC%8B%9C%EC%98%A8",
+      "verifiedVia": "https://d.namu.moe/w/%EC%82%AC%EC%82%AC%ED%82%A4%20%EC%8B%9C%EC%98%A8",
+      "section": "이미지 컬러",
+      "verifiedAt": "2026-10-13"
     },
     "AURORA": {
-      "color": "#ff5b9d",
-      "source": "https://unavatar.io/twitter/Rollie_twinkle"
+      "color": "#fe589e",
+      "colorName": "로리 로즈",
+      "source": "https://namu.wiki/w/%EC%BD%94%EB%85%B8%ED%95%98%EB%82%98%20%EC%98%A4%EB%A1%9C%EB%9D%BC",
+      "verifiedVia": "https://m.namu.moe/w/%EC%BD%94%EB%85%B8%ED%95%98%EB%82%98%20%EC%98%A4%EB%A1%9C%EB%9D%BC",
+      "section": "이미지 컬러",
+      "verifiedAt": "2026-10-13"
     },
     "NORIKO": {
-      "color": "#cc66ff",
-      "source": "https://unavatar.io/twitter/Noricco_U"
+      "color": "#ca96ff",
+      "colorName": "온리 퍼플",
+      "source": "https://namu.wiki/w/%EC%B5%B8%ED%9B%84%20%EB%85%B8%EB%A6%AC%EC%BD%94",
+      "verifiedVia": "https://m.namu.moe/w/%EC%B5%B8%ED%9B%84%20%EB%85%B8%EB%A6%AC%EC%BD%94",
+      "section": "이미지 컬러",
+      "verifiedAt": "2026-10-13"
     },
     "MIDORI": {
-      "color": "#3fbf7f",
-      "source": "https://unavatar.io/twitter/LittlegreenCom"
+      "color": "#16b500",
+      "colorName": "에코 그린",
+      "source": "https://namu.wiki/w/%EC%95%BC%EB%A7%88%EB%8B%A4%20%EB%AF%B8%EB%8F%84%EB%A6%AC",
+      "verifiedVia": "https://d.namu.moe/w/%EC%95%BC%EB%A7%88%EB%8B%A4%20%EB%AF%B8%EB%8F%84%EB%A6%AC",
+      "section": "이미지 컬러",
+      "verifiedAt": "2026-10-13"
     }
   },
-  "notes": "Member swatches are sampled from the stored X profile backgrounds. White has a neutral outline. Text inks are darkened for contrast."
+  "notes": "Member HEX values and color names read from individual Namu Wiki image-color profile fields via Namu Moe mirrors because the original site could not be read directly. These are wiki-listed values, not independently verified official design tokens. White has a neutral outline. Text inks are darkened for contrast."
 }
