@@ -209,7 +209,7 @@ h1, h2, h3 { font-weight: 700; }
 .view-tabs .nav-link:hover { background: #f5f9fc; }
 .period-arrows.btn-group { gap: 6px; }
 .period-arrows.btn-group > button { border-radius: 50%; }
-.search-wrap .form-control { padding: 0; height: auto; min-height: 0; border-radius: 0; box-shadow: none; line-height: 1.7; }
+.search-wrap .form-control { padding: 0; height: auto; min-height: 0; border-radius: 0; box-shadow: none; line-height: 1.5; }
 .toolbar .form-select { width: 110px; font-size: 11px; padding: 9px 28px 9px 12px; }
 #calendar-toggle { --bs-btn-active-border-color: var(--accent-ring); --bs-btn-active-color: var(--accent-ink); }
 .calendar-panel { position: fixed; top: 0; right: 0; bottom: 0; padding: 0; height: 100%; --bs-offcanvas-width: 360px; }
@@ -283,3 +283,59 @@ h1, h2, h3 { font-weight: 700; }
 .period-heading{padding-bottom:20px}.period-heading h2:focus{outline:none}.calendar-title h2{margin-top:0}.post-actions{margin-top:12px}
 
 .brand{font-size:18px;gap:8px;letter-spacing:-.8px}.brand-icon{font-size:32px}.brand-sub{font-size:9px;letter-spacing:0;margin-top:4px;line-height:1.5}@media(max-width:767.98px){.brand{font-size:16px}.brand-icon{font-size:28px}.brand-sub{display:block;font-size:8px;margin-top:2px}}
+
+/* Consistent spacing and neutral surfaces keep the colors on actual selections. */
+body{background:#fff}
+.feed-header{background:#ffffffed}
+.palette-ribbon{height:2px}
+.period-heading{background:#fff;padding:24px 22px 18px}
+.period-heading h2{margin:0;font-size:24px;line-height:1.4}
+.period-arrows button{width:32px;height:32px;border-radius:8px;background:#fff}
+.period-arrows.btn-group>button{border-radius:8px}
+.toolbar{display:grid;grid-template-columns:minmax(0,1fr) 104px;align-items:stretch;gap:8px;padding:0 22px 24px}
+.search-wrap{margin:0;min-width:0;min-height:40px;padding:9px 12px;border:1px solid #dfe5ea;border-radius:8px;background:#fafbfc;gap:8px}
+.search-wrap:focus-within{background:#fff;border-color:var(--brand-blue);box-shadow:0 0 0 2px #239fde10}
+.search-wrap input{font-size:12px}
+.search-wrap svg{width:16px;height:16px}
+.toolbar .form-select{margin:0;width:100%;max-width:none;height:40px;padding:8px 28px 8px 12px;font-size:12px;border-color:#dfe5ea;border-radius:8px;background-color:#fff}
+.member-picker{padding-top:0;padding-bottom:20px}
+.member-picker-heading{margin-bottom:14px}
+.member-button{border-radius:8px;gap:7px}
+.member-photo{outline-color:transparent;background:#f3f5f7;color:#72808b;box-shadow:none;border:1px solid #e4e8ec}
+.member-button.selected{background:var(--member-soft)}
+.member-button.selected .member-photo{background:var(--member-soft);color:var(--member-ink);outline-color:var(--member-ring);box-shadow:none;border-color:transparent}
+.member-button:hover .member-photo{box-shadow:none;outline-color:#cbd5de}
+.member-button.selected:hover .member-photo{outline-color:var(--member-ring)}
+.member-name{line-height:1.5}
+.results-line{padding-bottom:14px}
+.results-line span:first-child{color:#536471}
+.day-heading{background:#f8f9fb}
+.month-button.active{box-shadow:none}
+.calendar-card{background:#fff;border-color:#e4e8ec;border-radius:12px}
+.calendar-symbol{color:#73808b}
+.calendar-day.has-records{background:#f5f7f9;box-shadow:none}
+.calendar-day.selected{background:var(--accent-color);color:var(--accent-onColor)}
+.calendar-month-view{border-color:#dfe5ea;border-radius:8px;background:#fff;color:#536471}
+.side-start{margin-top:24px;min-height:40px;padding:9px 12px;border:1px solid #dfe5ea;border-radius:8px;background:#fff;color:#536471;box-shadow:none;gap:9px}
+.side-start:hover:not(:disabled){background:#f4f7fa;border-color:#bfcdd7}
+.side-start .side-start-label{color:inherit;font-size:11px;font-weight:500}
+.side-start .side-start-icon{color:var(--brand-blue);font-size:18px;line-height:1}
+.brand-sub{margin-top:5px;color:#7c8892}
+.month-nav-heading{margin-top:26px}
+@media(min-width:768px) and (max-width:1199.98px){.side-start{padding:9px;min-height:40px}}
+@media(max-width:767.98px){
+  .period-heading{padding:20px 18px 16px}
+  .period-heading h2{font-size:22px}
+  .toolbar{padding:0 18px 22px;grid-template-columns:minmax(0,1fr) 92px}
+  .search-wrap{min-height:38px;padding:8px 10px;gap:6px}
+  .search-wrap input{font-size:11px}
+  .toolbar .form-select{height:38px;font-size:11px;padding-left:10px;margin:0}
+  .member-picker{padding-bottom:18px}
+  .member-profiles{gap:8px 5px}
+  .side-start{margin-top:0;min-height:34px;padding:7px 10px}
+  .side-start .side-start-label{font-size:10px}
+  .side-start .side-start-icon{font-size:16px}
+  .brand-sub{margin-top:3px}
+}
+
+.side-start .side-start-icon{display:inline-flex;align-items:center}
