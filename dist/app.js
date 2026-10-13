@@ -130,7 +130,7 @@ function card(post) {
   actions.append(share); body.append(actions); article.append(avatar,body); return article;
 }
 function buildMemberPicker() {
-  const choices = [{handle:'',name:'전체',avatar:'brand/ikizulive-logo.png'}, ...members];
+  const choices = [{handle:'',name:'전체',avatar:'avatars/ikizulive_staff.jpg'}, ...members];
   $('member-profiles').replaceChildren();
   for(const member of choices) {
     const button = node('button','member-button'); setPalette(button,paletteFor(member.character),'member'); button.type = 'button'; button.dataset.member = member.handle;

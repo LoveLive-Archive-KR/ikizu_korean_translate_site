@@ -307,7 +307,7 @@ body{background:#fff}
 .member-button:hover .member-photo{box-shadow:none;outline-color:#cbd5de}
 .member-button.selected:hover .member-photo{outline-color:var(--member-ring)}
 .member-photo.member-photo-logo{background:#fff;font-size:11px}
-.member-photo.member-photo-logo img{object-fit:contain;padding:2px;background:#fff}
+.member-photo.member-photo-logo img{object-fit:cover;background:#008bb7}
 .member-name{line-height:1.5}
 .results-line{padding-bottom:14px}
 .results-line span:first-child{color:#536471}
@@ -341,6 +341,11 @@ body{background:#fff}
 }
 
 .side-start .side-start-icon{display:inline-flex;align-items:center}
+@media(min-width:768px) and (max-width:1199.98px){
+  .brand{font-size:12px;letter-spacing:-.6px}
+  .brand-text{display:block;white-space:nowrap}
+  .brand-sub{font-size:8px}
+}
 
 .translation-text{white-space:pre-wrap}
 .quote-card{margin:14px 0 0;padding:14px;border:1px solid #dfe5ea;border-radius:12px;background:#fff;white-space:normal;font-style:normal;min-width:0}
