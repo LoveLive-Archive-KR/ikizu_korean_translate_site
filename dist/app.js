@@ -5,6 +5,7 @@ let data = [], months = [], selected = '', selectedDay = '', calendarMonth = '',
 let toastTimer;
 let calendarFocusTarget = null;
 let selectedMembers = new Set(), members = [];
+let recommendations = {}, postIndex = new Map();
 function chosenMembers() { return members.filter(member => selectedMembers.has(member.handle)); }
 // Sampled profile backgrounds. Shion's white uses a visible neutral outline.
 const brandPalette = {color:'#239fde', orange:'#ed6d00'};
@@ -103,6 +104,38 @@ function formattedPostText(text,parentPost) {
   return fragment;
 }
 function notify(message) { clearTimeout(toastTimer); $('toast').textContent = message; $('toast').hidden = false; toastTimer = setTimeout(() => $('toast').hidden = true,3500); }
+function postLink(post) {
+  const url = new URL(location.href); url.search = '';
+  url.searchParams.set('mode','day'); url.searchParams.set('date',post.date.slice(0,10));
+  url.searchParams.set('month',post.month); url.hash = `post-${post.id}`;
+  return url.href;
+}
+function recommendationPanel(post) {
+  const entries = Array.isArray(recommendations[post.id])?recommendations[post.id]:[];
+  const seen = new Set();
+  const valid = entries.filter(entry => {
+    if(!entry || typeof entry.id !== 'string' || typeof entry.reason !== 'string' || entry.id === post.id || seen.has(entry.id) || !postIndex.has(entry.id)) return false;
+    seen.add(entry.id); return true;
+  }).slice(0,3);
+  if(!valid.length) return null;
+  const details = node('details','ai-recommendations');
+  const summary = node('summary'); summary.append(node('span','ai-label','AI 추천'),node('span','ai-count',`${valid.length}개 · 실험`));
+  const explanation = node('p','ai-explanation','내용과 게시 시점을 비교한 추천이에요. 실제 답글 관계를 뜻하지는 않아요.');
+  const list = node('ul','ai-list');
+  for(const entry of valid) {
+    const target = postIndex.get(entry.id); const item = node('li');
+    const link = node('a','ai-post-link'); link.href = postLink(target);
+    link.setAttribute('aria-label',`${target.name} · ${target.date.slice(0,10)} ${target.date.slice(11,16)} · ${entry.reason}`);
+    const header = node('span','ai-post-header');
+    if(target.avatar) { const image = node('img','ai-avatar'); image.src = target.avatar; image.alt = ''; image.width = 24; image.height = 24; image.loading = 'lazy'; header.append(image); }
+    const time = node('time','',`${target.date.slice(0,10).replaceAll('-','.')} ${target.date.slice(11,16)}`); time.dateTime = target.date;
+    header.append(node('strong','',target.name),time);
+    const text = (target.translation || target.original).replace(/\s+/g,' ').trim();
+    link.append(header,node('span','ai-preview',text.length > 120?text.slice(0,120)+'…':text),node('span','ai-reason',entry.reason+' →'));
+    item.append(link); list.append(item);
+  }
+  details.append(summary,explanation,list); return details;
+}
 function card(post) {
   const article = node('article','post'); setPalette(article,paletteFor(post.character),'member'); article.id = `post-${post.id}`; article.tabIndex = -1;
   article.setAttribute('aria-label',`${post.date.slice(0,10)} ${post.date.slice(11,16)} ${post.name}의 기록`);
@@ -127,7 +160,9 @@ function card(post) {
   const source = node('a'); source.href = post.url; source.target = '_blank'; source.rel = 'noopener noreferrer'; source.append(icon('external'),document.createTextNode('X에서 보기')); actions.append(source);
   const share = node('button'); share.type = 'button'; share.append(icon('link'),document.createTextNode('링크 복사')); share.setAttribute('aria-label',`${post.name}의 게시물 링크 복사`);
   share.addEventListener('click',async () => { const url = new URL(location.href); url.search = ''; url.searchParams.set('mode','day'); url.searchParams.set('date',post.date.slice(0,10)); url.searchParams.set('month',post.month); url.hash = article.id; try { await navigator.clipboard.writeText(url.href); notify('이 기록의 링크를 복사했어요.'); } catch { notify('링크를 복사하지 못했어요. X에서 보기로 원문을 열 수 있어요.'); } });
-  actions.append(share); body.append(actions); article.append(avatar,body); return article;
+  actions.append(share); body.append(actions);
+  const related = recommendationPanel(post); if(related) body.append(related);
+  article.append(avatar,body); return article;
 }
 function buildMemberPicker() {
   const choices = [{handle:'',name:'전체',avatar:'avatars/ikizulive_staff.jpg'}, ...members];
@@ -302,8 +337,24 @@ $('more').addEventListener('click',() => appendBatch(true));
 $('continue-month').addEventListener('click',() => mode === 'day'?setDay(continuation,true):setMonth(continuation,true));
 $('start-reading').addEventListener('click',() => { $('sort').value = 'asc'; $('search').value = ''; selectedMembers.clear(); mode = 'month'; selected = months[0]; selectedDay = firstDay(selected); calendarMonth = selected; render(); if(!closeCalendar($('month-title'))) focusArchive(); });
 window.matchMedia('(max-width:767.98px)').addEventListener('change',() => { if(data.length) renderMonthNav(); });
-fetch('data.json').then(response => { if(!response.ok) throw Error('data'); return response.json(); }).then(posts => {
+async function loadArchive() {
+  const response = await fetch('data.json'); if(!response.ok) throw Error('data');
+  const raw = await response.text(); const posts = JSON.parse(raw);
+  // The archive works even when the optional experiment is missing or stale.
+  try {
+    const response = await fetch('recommendations.json');
+    if(response.ok && crypto.subtle) {
+      const payload = await response.json();
+      const digest = await crypto.subtle.digest('SHA-256',new TextEncoder().encode(raw));
+      const fingerprint = Array.from(new Uint8Array(digest),value => value.toString(16).padStart(2,'0')).join('');
+      if(payload.metadata?.schemaVersion === 1 && payload.metadata.sourceSha256 === fingerprint && payload.byPost && typeof payload.byPost === 'object') recommendations = payload.byPost;
+    }
+  } catch { /* Recommendations never prevent the timeline from loading. */ }
+  return posts;
+}
+loadArchive().then(posts => {
   data = posts.sort((a,b) => a.date.localeCompare(b.date) || (BigInt(a.id) < BigInt(b.id)?-1:BigInt(a.id) > BigInt(b.id)?1:0)); months = [...new Set(data.map(p => p.month))].sort(); if(!months.length) throw Error('empty');
+  postIndex = new Map(data.map(post => [post.id,post]));
   const order = ['POLKA','MAI','AKIRA','HANABI','YUKURI','MIRACLE','SHION','AURORA','NORIKO','MIDORI'];
   members = [...new Map(data.map(p => [p.handle,p])).values()].sort((a,b) => order.indexOf(a.character)-order.indexOf(b.character));
   buildMemberPicker(); buildPaletteRibbon();

@@ -2,3 +2,7 @@ messages.db
 messages.db-*
 *.tar.gz
 .DS_Store
+node_modules/
+.cache/
+recommendations.db-*
+__pycache__/
