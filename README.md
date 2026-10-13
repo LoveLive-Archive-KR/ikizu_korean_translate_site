@@ -74,7 +74,7 @@ X 스타일의 한 열 피드에서 `월별`, `일별`, `전체 기록` 탭으�
 
 ## AI 추천 실험
 
-`experiment/ai-recommendations` 브랜치의 로컬 실험입니다. `main`의 GitHub Pages 배포에는 반영하지 않습니다.
+`experiment/ai-recommendations` 브랜치에서 검증한 뒤 `main`의 GitHub Pages 운영 사이트에 반영했습니다. 화면에는 `AI 추천 · 실험`으로 표시합니다.
 
 ```sh
 npm ci
