@@ -54,7 +54,7 @@ h1{font-size:21px;letter-spacing:-.8px;margin:5px 0 0;display:flex;align-items:c
 .day-heading{margin:0;background:#f7f9fa;padding:10px 22px;font-size:11px;font-weight:600;color:#536471;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px}
 .day-year{margin-left:auto;font-size:9px;font-weight:400;color:var(--muted)}
 .day-dot{width:4px;height:4px;background:var(--blue);border-radius:50%}
-.post{display:grid;grid-template-columns:42px minmax(0,1fr);gap:12px;position:relative;padding:18px 20px 13px;border-bottom:1px solid var(--line);scroll-margin-top:100px;transition:background .15s}
+.post{display:grid;grid-template-columns:42px minmax(0,1fr);gap:12px;position:relative;padding:18px 20px 13px;border-bottom:1px solid color-mix(in srgb,var(--member-ring) 45%,var(--line));scroll-margin-top:100px;transition:background .15s}
 .post:hover{background:#fbfcfd}
 .post:focus{outline:none}
 .post:focus-visible{box-shadow:inset 3px 0 var(--blue)}
