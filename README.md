@@ -11,6 +11,16 @@ python3 -m http.server 5173 --directory dist
 
 http://localhost:5173 에서 확인합니다. DB 갱신 후 export 명령을 다시 실행하세요.
 
+## GitHub Pages 배포
+
+저장소: https://github.com/LoveLive-Archive-KR/ikizu_korean_translate_site
+
+저장소의 `Settings → Pages → Build and deployment → Source`를 `GitHub Actions`로 설정합니다. `main` 브랜치에 push하면 `.github/workflows/pages.yml`이 `dist` 폴더만 배포합니다. 원본 DB는 업로드하지 않으며 이미 내보낸 `dist/data.json`을 사용합니다.
+
+배포 주소: https://lovelive-archive-kr.github.io/ikizu_korean_translate_site/
+
+번역을 갱신하려면 로컬에서 `python3 scripts/export_data.py`를 실행하고 변경된 `dist/data.json`을 커밋한 뒤 push하세요. 배포 결과는 저장소의 `Actions` 탭에서 확인합니다.
+
 - 한국 시간(UTC+9) 기준 실제 게시일로 월을 분류합니다. 게시일은 X snowflake ID에서 계산하며 DB의 수집 시각과 구분합니다.
 - `corrected_text`가 있으면 수정 번역을 우선합니다.
 - 월별 탐색, 멤버 필터, 전체 기간 검색, 이름/계정/번역/원문 검색, 정렬, 원문 펼치기, 첨부 이미지, 원문 링크를 제공합니다.
