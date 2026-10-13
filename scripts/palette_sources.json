@@ -1,0 +1,51 @@
+{
+  "brand": {
+    "blue": "#239fde",
+    "orange": "#ed6d00",
+    "reference": "https://digitalpr.jp/r/109574",
+    "note": "UI palette inspired by project logo blue and club logo orange; sampled bitmap values, not official design-system tokens."
+  },
+  "members": {
+    "POLKA": {
+      "color": "#ffff66",
+      "source": "https://unavatar.io/twitter/polka_lion"
+    },
+    "MAI": {
+      "color": "#4d93d9",
+      "source": "https://unavatar.io/twitter/My_Mai_Eld"
+    },
+    "AKIRA": {
+      "color": "#b5e6a2",
+      "source": "https://unavatar.io/twitter/G_Akky304250"
+    },
+    "HANABI": {
+      "color": "#ff4747",
+      "source": "https://unavatar.io/twitter/hanabistarmine"
+    },
+    "YUKURI": {
+      "color": "#c0e6f5",
+      "source": "https://unavatar.io/twitter/Yukuri_talk"
+    },
+    "MIRACLE": {
+      "color": "#ffb6c1",
+      "source": "https://unavatar.io/twitter/MiracleGoldSP"
+    },
+    "SHION": {
+      "color": "#ffffff",
+      "source": "https://unavatar.io/twitter/ShaunTheBunny"
+    },
+    "AURORA": {
+      "color": "#ff5b9d",
+      "source": "https://unavatar.io/twitter/Rollie_twinkle"
+    },
+    "NORIKO": {
+      "color": "#cc66ff",
+      "source": "https://unavatar.io/twitter/Noricco_U"
+    },
+    "MIDORI": {
+      "color": "#3fbf7f",
+      "source": "https://unavatar.io/twitter/LittlegreenCom"
+    }
+  },
+  "notes": "Member swatches are sampled from the stored X profile backgrounds. White has a neutral outline. Text inks are darkened for contrast."
+}

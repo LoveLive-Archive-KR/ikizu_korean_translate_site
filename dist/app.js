@@ -5,6 +5,38 @@ const batchSize = 20;
 let data = [], months = [], selected = '', selectedDay = '', calendarMonth = '', filtered = [], shown = 0, continuation = '', mode = 'month';
 let toastTimer;
 let selectedMember = '', members = [];
+// Sampled profile backgrounds. Shion's white uses a visible neutral outline.
+const brandPalette = {color:'#239fde', orange:'#ed6d00'};
+const memberPalette = {
+  POLKA:'#ffff66', MAI:'#4d93d9', AKIRA:'#b5e6a2', HANABI:'#ff4747',
+  YUKURI:'#c0e6f5', MIRACLE:'#ffb6c1', SHION:'#ffffff', AURORA:'#ff5b9d',
+  NORIKO:'#cc66ff', MIDORI:'#3fbf7f'
+};
+function rgb(hex) { return hex.slice(1).match(/../g).map(v => parseInt(v,16)); }
+function hex(values) { return '#'+values.map(v => Math.round(v).toString(16).padStart(2,'0')).join(''); }
+function luminance(color) { const [r,g,b] = rgb(color).map(v => { v /= 255; return v <= .04045 ? v/12.92 : ((v+.055)/1.055)**2.4; }); return .2126*r+.7152*g+.0722*b; }
+function darkInk(color) {
+  let ink = color;
+  while ((1.05/(luminance(ink)+.05)) < 5.5) ink = hex(rgb(ink).map(v => v*.88));
+  return ink;
+}
+function paletteFor(character) {
+  const color = memberPalette[character] || brandPalette.color;
+  return {color, ring:color === '#ffffff'?'#94a1b1':color, ink:color === '#ffffff'?'#526073':darkInk(color), soft:hex(rgb(color).map(v => v*.13+255*.87)), onColor:(luminance(color)+.05)/(luminance('#122637')+.05) >= 4.5?'#122637':'#ffffff'};
+}
+function setPalette(element,palette,prefix='accent') {
+  for(const key of ['color','ring','ink','soft','onColor']) element.style.setProperty(`--${prefix}-${key}`,palette[key]);
+}
+function updateTheme() {
+  const member = members.find(member => member.handle === selectedMember);
+  const palette = paletteFor(member?.character); setPalette(document.documentElement,palette);
+  document.querySelector('meta[name="theme-color"]').content = palette.soft;
+}
+function buildPaletteRibbon() {
+  const ribbon = $('palette-ribbon'); ribbon.replaceChildren();
+  for(const member of members) { const color = node('span'); color.style.background = memberPalette[member.character]; ribbon.append(color); }
+}
+
 $('search').value = params.get('q') || '';
 $('sort').value = params.get('sort') === 'desc' ? 'desc' : 'asc';
 function node(tag, className, text) { const el = document.createElement(tag); if(className) el.className = className; if(text !== undefined) el.textContent = text; return el; }
@@ -23,14 +55,15 @@ function linkedText(text) {
 }
 function notify(message) { clearTimeout(toastTimer); $('toast').textContent = message; $('toast').hidden = false; toastTimer = setTimeout(() => $('toast').hidden = true,3500); }
 function card(post) {
-  const article = node('article','post'); article.id = `post-${post.id}`; article.tabIndex = -1;
+  const article = node('article','post'); setPalette(article,paletteFor(post.character),'member'); article.id = `post-${post.id}`; article.tabIndex = -1;
   article.setAttribute('aria-label',`${post.date.slice(0,10)} ${post.date.slice(11,16)} ${post.name}의 기록`);
   const avatar = node('a','avatar-link',(post.name || post.handle).slice(0,1)); avatar.href = `https://x.com/${encodeURIComponent(post.handle)}`; avatar.target = '_blank'; avatar.rel = 'noopener noreferrer'; avatar.setAttribute('aria-label',`${post.name}의 X 프로필`);
   if(post.avatar) { const img = node('img','avatar'); img.src = post.avatar; img.alt = `${post.name} 프로필 사진`; img.width = 42; img.height = 42; img.loading = 'lazy'; img.addEventListener('error',() => img.remove(),{once:true}); avatar.append(img); }
   const body = node('div','post-body'); const header = node('div','post-header');
   const name = node('a','account-name',post.name); name.href = avatar.href; name.target = '_blank'; name.rel = 'noopener noreferrer';
   const time = node('time','',post.date.slice(5,10).replace('-','.') + ' ' + post.date.slice(11,16)); time.dateTime = post.date; time.title = `${post.date.slice(0,10)} (한국 시간)`;
-  header.append(name,node('span','account-handle',`@${post.handle}`),node('span','post-dot','·'),time);
+  const dot = node('span','member-color-dot'); dot.setAttribute('aria-hidden','true');
+  header.append(name,dot,node('span','account-handle',`@${post.handle}`),node('span','post-dot','·'),time);
   const translation = node('div','translation'); translation.append(linkedText(post.translation)); body.append(header,translation);
   if(post.media.length) {
     const images = node('div','post-media');
@@ -51,7 +84,7 @@ function buildMemberPicker() {
   const choices = [{handle:'',name:'전체'}, ...members];
   $('member-profiles').replaceChildren();
   for(const member of choices) {
-    const button = node('button','member-button'); button.type = 'button'; button.dataset.member = member.handle;
+    const button = node('button','member-button'); setPalette(button,paletteFor(member.character),'member'); button.type = 'button'; button.dataset.member = member.handle;
     button.title = member.handle ? `${member.name} (@${member.handle})` : '전체 멤버';
     button.setAttribute('aria-label', member.handle ? `${member.name}의 글만 보기` : '전체 멤버의 글 보기');
     const photo = node('span','member-photo',member.handle ? member.name.slice(0,1) : '✳');
@@ -148,7 +181,7 @@ function appendBatch(moveFocus = false) {
   if(moveFocus && firstNew) { firstNew.focus({preventScroll:true}); firstNew.scrollIntoView({block:'start',behavior:'instant'}); }
 }
 function render() {
-  updateMemberPicker(); renderMonthNav(); renderCalendar(); $('date-picker').value = selectedDay;
+  updateTheme(); updateMemberPicker(); renderMonthNav(); renderCalendar(); $('date-picker').value = selectedDay;
   for(const value of ['month','day','all']) $(`view-${value}`).setAttribute('aria-pressed',String(mode === value));
   $('previous').disabled = mode === 'all'; $('next').disabled = mode === 'all';
   $('previous').setAttribute('aria-label',mode === 'day'?'이전 날짜':'이전 달'); $('next').setAttribute('aria-label',mode === 'day'?'다음 날짜':'다음 달');
@@ -189,7 +222,7 @@ fetch('data.json').then(response => { if(!response.ok) throw Error('data'); retu
   data = posts.sort((a,b) => a.date.localeCompare(b.date) || (BigInt(a.id) < BigInt(b.id)?-1:BigInt(a.id) > BigInt(b.id)?1:0)); months = [...new Set(data.map(p => p.month))].sort(); if(!months.length) throw Error('empty');
   const order = ['POLKA','MAI','AKIRA','HANABI','YUKURI','MIRACLE','SHION','AURORA','NORIKO','MIDORI'];
   members = [...new Map(data.map(p => [p.handle,p])).values()].sort((a,b) => order.indexOf(a.character)-order.indexOf(b.character));
-  buildMemberPicker();
+  buildMemberPicker(); buildPaletteRibbon();
   if(data.some(p => p.handle === params.get('member'))) selectedMember = params.get('member');
   mode = ['day','all'].includes(params.get('mode'))?params.get('mode'):params.get('all') === '1'?'all':'month';
   selected = validMonth(params.get('month'))?params.get('month'):($('sort').value === 'desc'?months.at(-1):months[0]);

@@ -7,7 +7,7 @@
 <body>
 <div class="layout">
 <aside class="sidebar">
-<a class="brand" href="./"><span class="brand-icon">✳</span><span>IKIZU<span class="brand-sub">TRANSLATION ARCHIVE</span></span></a>
+<a class="brand" href="./"><span class="brand-icon">✳</span><span>IKIZU<span class="brand-exclamation">!</span><span class="brand-sub">TRANSLATION ARCHIVE</span></span></a>
 <div class="side-heading">우리의 이야기가 이어지는 곳.</div>
 <button id="start-reading" class="side-start" type="button"><span aria-hidden="true">↗</span> 처음부터 읽기</button>
 <div class="month-nav-heading"><strong>월별 아카이브</strong><label><span class="sr-only">연도</span><select id="year"></select></label></div>
@@ -15,7 +15,7 @@
 <div class="aside-footer">여러 멤버의 글을 시간순으로.<br><strong id="total">—</strong>개의 번역 · <strong id="month-total">—</strong>개월의 기록</div>
 </aside>
 <main>
-<header class="feed-header"><div><span class="eyebrow">IKIZULIVE! · FAN ARCHIVE</span><h1>번역 타임라인 <span class="live-dot" aria-hidden="true"></span></h1></div><button id="calendar-toggle" type="button" aria-expanded="false" aria-controls="calendar-panel">캘린더 <span aria-hidden="true">▦</span></button></header>
+<header class="feed-header"><div id="palette-ribbon" class="palette-ribbon" aria-hidden="true"></div><div><span class="eyebrow">IKIZULIVE! · FAN ARCHIVE</span><h1>번역 타임라인 <span class="live-dot" aria-hidden="true"></span></h1></div><button id="calendar-toggle" type="button" aria-expanded="false" aria-controls="calendar-panel">캘린더 <span aria-hidden="true">▦</span></button></header>
 <section class="archive" aria-labelledby="month-title">
 <div class="view-tabs" role="group" aria-label="기록 보기 단위"><button id="view-month" type="button" aria-pressed="true">월별</button><button id="view-day" type="button" aria-pressed="false">일별</button><button id="view-all" type="button" aria-pressed="false">전체 기록</button></div>
 <div class="period-heading"><div><span id="month-label" class="eyebrow">MONTHLY TIMELINE</span><h2 id="month-title" tabindex="-1">불러오는 중…</h2></div><div class="period-arrows"><button id="previous" type="button" aria-label="이전 달">‹</button><button id="next" type="button" aria-label="다음 달">›</button></div></div>
