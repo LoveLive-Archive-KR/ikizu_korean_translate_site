@@ -4,6 +4,7 @@ const params = new URLSearchParams(location.search);
 const batchSize = 20;
 let data = [], months = [], selected = '', selectedDay = '', calendarMonth = '', filtered = [], shown = 0, continuation = '', mode = 'month';
 let toastTimer;
+let calendarFocusTarget = null;
 let selectedMember = '', members = [];
 // Sampled profile backgrounds. Shion's white uses a visible neutral outline.
 const brandPalette = {color:'#239fde', orange:'#ed6d00'};
@@ -115,18 +116,24 @@ function matches(post,includePeriod = true) {
 }
 function firstDay(month) { return data.find(p => p.month === month && matches(p,false))?.date.slice(0,10) || month+'-01'; }
 function focusArchive() { $('month-title').focus({preventScroll:true}); $('month-title').scrollIntoView({block:'start',behavior:'instant'}); }
-function closeCalendar() { document.querySelector('.layout').classList.remove('calendar-open'); $('calendar-panel').classList.remove('mobile-open'); $('calendar-toggle').setAttribute('aria-expanded','false'); }
+function closeCalendar(focusTarget = $('calendar-toggle')) {
+  const panel = $('calendar-panel');
+  if(!panel.classList.contains('show') && !panel.classList.contains('showing')) return false;
+  calendarFocusTarget = focusTarget;
+  bootstrap.Offcanvas.getOrCreateInstance(panel).hide();
+  return true;
+}
 function setMonth(month,moveFocus = false) {
   if(!validMonth(month)) return; selected = month; calendarMonth = month; mode = 'month';
   if(selectedDay.slice(0,7) !== month) selectedDay = firstDay(month);
-  render(); if(moveFocus) { closeCalendar(); focusArchive(); }
+  render(); if(moveFocus && !closeCalendar($('month-title'))) focusArchive();
 }
-function setDay(day,moveFocus = false) { if(!validDay(day)) return; selectedDay = day; selected = day.slice(0,7); calendarMonth = selected; mode = 'day'; render(); if(moveFocus) { closeCalendar(); focusArchive(); } }
+function setDay(day,moveFocus = false) { if(!validDay(day)) return; selectedDay = day; selected = day.slice(0,7); calendarMonth = selected; mode = 'day'; render(); if(moveFocus && !closeCalendar($('month-title'))) focusArchive(); }
 function setMode(value) { mode = value; if(value === 'day' && selectedDay.slice(0,7) !== selected) selectedDay = firstDay(selected); render(); }
 function renderMonthNav() {
   const year = selected.slice(0,4); const years = [...new Set([...months.map(m => m.slice(0,4)),year])].sort();
   $('year').replaceChildren(...years.map(y => { const option = node('option','',`${y}년`); option.value = y; return option; })); $('year').value = year;
-  const mobile = window.matchMedia('(max-width:640px)').matches;
+  const mobile = window.matchMedia('(max-width:767.98px)').matches;
   const choices = mobile ? [...new Set([...months,selected])].sort() : Array.from({length:12},(_,i) => `${year}-${String(i+1).padStart(2,'0')}`);
   $('months').replaceChildren();
   for(const month of choices) {
@@ -210,14 +217,26 @@ $('month-picker').addEventListener('change',() => setMonth($('month-picker').val
 $('calendar-previous').addEventListener('click',() => { calendarMonth = shiftMonth(calendarMonth,-1); renderCalendar(); });
 $('calendar-next').addEventListener('click',() => { calendarMonth = shiftMonth(calendarMonth,1); renderCalendar(); });
 $('calendar-month-view').addEventListener('click',() => setMonth(calendarMonth,true));
-$('calendar-toggle').addEventListener('click',() => { const open = $('calendar-toggle').getAttribute('aria-expanded') !== 'true'; document.querySelector('.layout').classList.toggle('calendar-open',open); $('calendar-panel').classList.toggle('mobile-open',open); $('calendar-toggle').setAttribute('aria-expanded',String(open)); if(open) { $('calendar-panel').scrollIntoView({block:'start',behavior:'instant'}); $('month-picker').focus({preventScroll:true}); } });
-$('calendar-close').addEventListener('click',() => { closeCalendar(); $('calendar-toggle').focus(); });
-$('calendar-panel').addEventListener('keydown',event => { if(event.key === 'Escape') { closeCalendar(); $('calendar-toggle').focus(); } });
+$('calendar-toggle').addEventListener('click',() => {
+  calendarFocusTarget = $('calendar-toggle');
+  bootstrap.Offcanvas.getOrCreateInstance($('calendar-panel')).toggle();
+});
+$('calendar-close').addEventListener('click',() => closeCalendar());
+$('calendar-panel').addEventListener('shown.bs.offcanvas',() => {
+  $('calendar-toggle').setAttribute('aria-expanded','true');
+  $('month-picker').focus({preventScroll:true});
+});
+$('calendar-panel').addEventListener('hidden.bs.offcanvas',() => {
+  $('calendar-toggle').setAttribute('aria-expanded','false');
+  const target = calendarFocusTarget; calendarFocusTarget = null;
+  if(target === $('month-title')) focusArchive();
+  else if(target && window.matchMedia('(max-width:1199.98px)').matches) target.focus({preventScroll:true});
+});
 $('calendar-days').addEventListener('keydown',event => { const step = {ArrowLeft:-1,ArrowRight:1,ArrowUp:-7,ArrowDown:7}[event.key]; if(!step || !event.target.dataset.date) return; event.preventDefault(); const day = shiftDay(event.target.dataset.date,step); if(day.slice(0,7) !== calendarMonth) { calendarMonth = day.slice(0,7); renderCalendar(); } $('calendar-days').querySelector(`[data-date="${day}"]`)?.focus(); });
 $('more').addEventListener('click',() => appendBatch(true));
 $('continue-month').addEventListener('click',() => mode === 'day'?setDay(continuation,true):setMonth(continuation,true));
 $('start-reading').addEventListener('click',() => { $('sort').value = 'asc'; $('search').value = ''; selectedMember = ''; setMonth(months[0],true); });
-window.matchMedia('(max-width:640px)').addEventListener('change',() => { if(data.length) renderMonthNav(); });
+window.matchMedia('(max-width:767.98px)').addEventListener('change',() => { if(data.length) renderMonthNav(); });
 fetch('data.json').then(response => { if(!response.ok) throw Error('data'); return response.json(); }).then(posts => {
   data = posts.sort((a,b) => a.date.localeCompare(b.date) || (BigInt(a.id) < BigInt(b.id)?-1:BigInt(a.id) > BigInt(b.id)?1:0)); months = [...new Set(data.map(p => p.month))].sort(); if(!months.length) throw Error('empty');
   const order = ['POLKA','MAI','AKIRA','HANABI','YUKURI','MIRACLE','SHION','AURORA','NORIKO','MIDORI'];

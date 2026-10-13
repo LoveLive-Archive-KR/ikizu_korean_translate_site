@@ -2,37 +2,37 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#ffffff"><meta name="description" content="이키즈라이브 멤버들의 한국어 번역을 시간순으로 읽는 타임라인. 캘린더에서 월별·일별 기록을 찾아보세요.">
-<title>이키즈라이브 · 번역 타임라인</title><link rel="stylesheet" href="style.css"><script src="app.js" defer></script>
+<title>이키즈라이브 · 번역 타임라인</title><link rel="stylesheet" href="vendor/bootstrap/bootstrap.min.css"><link rel="stylesheet" href="style.css"><script src="vendor/bootstrap/bootstrap.bundle.min.js" defer></script><script src="app.js" defer></script>
 </head>
 <body>
-<div class="layout">
-<aside class="sidebar">
-<a class="brand" href="./"><span class="brand-icon">✳</span><span>IKIZU<span class="brand-exclamation">!</span><span class="brand-sub">TRANSLATION ARCHIVE</span></span></a>
+<div class="container-xl app-shell px-0"><div class="row g-0 align-items-start layout">
+<aside class="sidebar col-12 col-md-2 col-xl-2">
+<a class="brand" href="./"><span class="brand-icon">✳</span><span class="brand-text">IKIZU<span class="brand-exclamation">!</span><span class="brand-sub">TRANSLATION ARCHIVE</span></span></a>
 <div class="side-heading">우리의 이야기가 이어지는 곳.</div>
-<button id="start-reading" class="side-start" type="button"><span aria-hidden="true">↗</span> 처음부터 읽기</button>
+<button id="start-reading" class="side-start btn" aria-label="처음부터 읽기" type="button"><span class="side-start-icon" aria-hidden="true">↗</span><span class="side-start-label">처음부터 읽기</span></button>
 <div class="month-nav-heading"><strong>월별 아카이브</strong><label><span class="sr-only">연도</span><select id="year"></select></label></div>
 <nav id="months" aria-label="월별 아카이브"></nav>
 <div class="aside-footer">여러 멤버의 글을 시간순으로.<br><strong id="total">—</strong>개의 번역 · <strong id="month-total">—</strong>개월의 기록</div>
 </aside>
-<main>
-<header class="feed-header"><div id="palette-ribbon" class="palette-ribbon" aria-hidden="true"></div><div><span class="eyebrow">IKIZULIVE! · FAN ARCHIVE</span><h1>번역 타임라인 <span class="live-dot" aria-hidden="true"></span></h1></div><button id="calendar-toggle" type="button" aria-expanded="false" aria-controls="calendar-panel">캘린더 <span aria-hidden="true">▦</span></button></header>
+<main class="feed-column col-12 col-md-10 col-xl-7">
+<header class="feed-header d-flex align-items-center justify-content-between"><div id="palette-ribbon" class="palette-ribbon" aria-hidden="true"></div><div><span class="eyebrow">IKIZULIVE! · FAN ARCHIVE</span><h1>번역 타임라인 <span class="live-dot" aria-hidden="true"></span></h1></div><button id="calendar-toggle" class="btn btn-sm" type="button" aria-expanded="false" aria-haspopup="dialog" aria-controls="calendar-panel">캘린더 <span aria-hidden="true">▦</span></button></header>
 <section class="archive" aria-labelledby="month-title">
-<div class="view-tabs" role="group" aria-label="기록 보기 단위"><button id="view-month" type="button" aria-pressed="true">월별</button><button id="view-day" type="button" aria-pressed="false">일별</button><button id="view-all" type="button" aria-pressed="false">전체 기록</button></div>
-<div class="period-heading"><div><span id="month-label" class="eyebrow">MONTHLY TIMELINE</span><h2 id="month-title" tabindex="-1">불러오는 중…</h2></div><div class="period-arrows"><button id="previous" type="button" aria-label="이전 달">‹</button><button id="next" type="button" aria-label="다음 달">›</button></div></div>
-<div class="date-jump"><label for="date-picker">날짜로 바로 가기</label><input type="date" id="date-picker" aria-label="원하는 날짜 선택"><span id="period-help">여러 멤버의 이야기를 함께 읽어요.</span></div>
-<div class="toolbar"><label class="search-wrap"><svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="10" cy="10" r="6.5"/><path d="m15 15 5 5"/></svg><input id="search" type="search" placeholder="이 달의 번역 검색" aria-label="이름, 계정, 번역 및 원문 검색"></label><select id="sort" aria-label="정렬"><option value="asc">시간순</option><option value="desc">최신순</option></select></div>
+<div class="view-tabs nav nav-fill" role="group" aria-label="기록 보기 단위"><button id="view-month" class="nav-link" type="button" aria-pressed="true">월별</button><button id="view-day" class="nav-link" type="button" aria-pressed="false">일별</button><button id="view-all" class="nav-link" type="button" aria-pressed="false">전체 기록</button></div>
+<div class="period-heading"><div><span id="month-label" class="eyebrow">MONTHLY TIMELINE</span><h2 id="month-title" tabindex="-1">불러오는 중…</h2></div><div class="period-arrows btn-group"><button id="previous" type="button" aria-label="이전 달">‹</button><button id="next" type="button" aria-label="다음 달">›</button></div></div>
+<div class="date-jump"><label for="date-picker">날짜로 바로 가기</label><input type="date" class="form-control form-control-sm" id="date-picker" aria-label="원하는 날짜 선택"><span id="period-help">여러 멤버의 이야기를 함께 읽어요.</span></div>
+<div class="toolbar"><label class="search-wrap"><svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="10" cy="10" r="6.5"/><path d="m15 15 5 5"/></svg><input id="search" class="form-control form-control-sm" type="search" placeholder="이 달의 번역 검색" aria-label="이름, 계정, 번역 및 원문 검색"></label><select class="sort-control form-select form-select-sm" id="sort" aria-label="정렬"><option value="asc">시간순</option><option value="desc">최신순</option></select></div>
 <section class="member-picker" aria-label="프로필 사진으로 멤버 선택"><div class="member-picker-heading"><span>멤버별로 보기</span><strong id="selected-member-label">전체 멤버</strong></div><div id="member-profiles" class="member-profiles" role="group" aria-label="멤버 필터"></div></section><div class="results-line"><span id="result-count" role="status" aria-live="polite"></span><span id="reading-description">오래된 글부터 · 한국 시간</span></div>
 <div id="posts" class="posts" aria-busy="true"></div>
 <div class="reading-progress" id="reading-progress" role="status" aria-live="polite"></div><button id="more" class="more" type="button" hidden>다음 기록 이어 읽기 ↓</button><div id="reading-end" class="reading-end" hidden><p id="reading-end-label"></p><button id="continue-month" type="button" hidden></button></div>
 </section>
 <footer>이키즈라이브 멤버들의 번역을 모은 비공식 팬 아카이브입니다.<br><a href="https://x.com/ikizulive_staff" target="_blank" rel="noopener noreferrer">공식 X ↗</a></footer>
 </main>
-<aside id="calendar-panel" class="calendar-panel" aria-label="기록 캘린더">
-<div class="calendar-card"><div class="calendar-title"><div><span class="eyebrow">FIND YOUR MOMENT</span><h2>기록 캘린더</h2></div><span class="calendar-symbol" aria-hidden="true">▦</span><button id="calendar-close" type="button">닫기 ×</button></div>
+<aside id="calendar-panel" class="calendar-panel offcanvas-xl offcanvas-end col-xl-3" tabindex="-1" aria-labelledby="calendar-title">
+<div class="offcanvas-body"><div class="calendar-card card"><div class="calendar-title"><div><span class="eyebrow">FIND YOUR MOMENT</span><h2 id="calendar-title">기록 캘린더</h2></div><span class="calendar-symbol" aria-hidden="true">▦</span><button id="calendar-close" class="btn btn-sm" type="button">닫기 ×</button></div>
 <div class="calendar-navigation"><button id="calendar-previous" type="button" aria-label="캘린더 이전 달">‹</button><label><span class="sr-only">캘린더 연도와 월</span><input id="month-picker" type="month"></label><button id="calendar-next" type="button" aria-label="캘린더 다음 달">›</button></div>
 <div class="weekdays" aria-hidden="true"><span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span></div><div id="calendar-days" class="calendar-days" role="group" aria-label="날짜 선택"></div>
 <div class="calendar-legend"><span><i></i> 기록이 있는 날</span><span id="calendar-count"></span></div><button id="calendar-month-view" class="calendar-month-view" type="button">이 달 전체 보기</button><p class="calendar-hint">날짜를 누르면 그날의 타임라인으로 이동해요.</p></div>
-<div class="reading-note"><span class="eyebrow">ONE DAY AT A TIME</span><h3>한마디씩, 하루씩.</h3><p>멤버들의 이야기가 시간순으로 이어집니다.<br>캘린더로 원하는 순간을 찾아보세요.</p><span class="note-flower" aria-hidden="true">✳</span></div>
-</aside>
-</div><div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+<div class="reading-note card"><span class="eyebrow">ONE DAY AT A TIME</span><h3>한마디씩, 하루씩.</h3><p>멤버들의 이야기가 시간순으로 이어집니다.<br>캘린더로 원하는 순간을 찾아보세요.</p><span class="note-flower" aria-hidden="true">✳</span></div>
+</div></aside>
+</div></div><div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
 </body></html>
