@@ -4,6 +4,7 @@ const params = new URLSearchParams(location.search);
 const batchSize = 20;
 let data = [], months = [], selected = '', selectedDay = '', calendarMonth = '', filtered = [], shown = 0, continuation = '', mode = 'month';
 let toastTimer;
+let selectedMember = '', members = [];
 $('search').value = params.get('q') || '';
 $('sort').value = params.get('sort') === 'desc' ? 'desc' : 'asc';
 function node(tag, className, text) { const el = document.createElement(tag); if(className) el.className = className; if(text !== undefined) el.textContent = text; return el; }
@@ -46,6 +47,27 @@ function card(post) {
   share.addEventListener('click',async () => { const url = new URL(location.href); url.searchParams.set('mode','day'); url.searchParams.set('date',post.date.slice(0,10)); url.searchParams.set('month',post.month); url.hash = article.id; try { await navigator.clipboard.writeText(url.href); notify('이 기록의 링크를 복사했어요.'); } catch { notify('링크를 복사하지 못했어요. 브라우저의 주소 복사를 이용해 주세요.'); } });
   actions.append(share); body.append(actions); article.append(avatar,body); return article;
 }
+function buildMemberPicker() {
+  const choices = [{handle:'',name:'전체'}, ...members];
+  $('member-profiles').replaceChildren();
+  for(const member of choices) {
+    const button = node('button','member-button'); button.type = 'button'; button.dataset.member = member.handle;
+    button.title = member.handle ? `${member.name} (@${member.handle})` : '전체 멤버';
+    button.setAttribute('aria-label', member.handle ? `${member.name}의 글만 보기` : '전체 멤버의 글 보기');
+    const photo = node('span','member-photo',member.handle ? member.name.slice(0,1) : '✳');
+    if(member.avatar) { const img = node('img'); img.src = member.avatar; img.alt = ''; img.width = 36; img.height = 36; img.decoding = 'async'; img.addEventListener('error',() => img.remove(),{once:true}); photo.append(img); }
+    button.append(photo,node('span','member-name',member.name));
+    button.addEventListener('click',() => { selectedMember = member.handle; render(); });
+    $('member-profiles').append(button);
+  }
+}
+function updateMemberPicker() {
+  for(const button of $('member-profiles').children) {
+    const active = button.dataset.member === selectedMember;
+    button.setAttribute('aria-pressed',String(active)); button.classList.toggle('selected',active);
+  }
+  $('selected-member-label').textContent = selectedMember ? `${members.find(member => member.handle === selectedMember).name}의 기록` : '전체 멤버';
+}
 function validMonth(value) { return /^[1-9]\d{3}-(0[1-9]|1[0-2])$/.test(value || ''); }
 function validDay(value) { return /^\d{4}-\d{2}-\d{2}$/.test(value || '') && !Number.isNaN(Date.parse(value+'T00:00:00Z')) && new Date(value+'T00:00:00Z').toISOString().slice(0,10) === value; }
 function monthTitle(value) { return `${value.slice(0,4)}년 ${Number(value.slice(5))}월`; }
@@ -55,7 +77,7 @@ function shiftDay(value,step) { const d = new Date(value+'T00:00:00Z'); d.setUTC
 function matches(post,includePeriod = true) {
   const query = $('search').value.trim().toLocaleLowerCase();
   return (!includePeriod || mode === 'all' || (mode === 'day' ? post.date.slice(0,10) === selectedDay : post.month === selected))
-    && (!$('member').value || post.handle === $('member').value)
+    && (!selectedMember || post.handle === selectedMember)
     && (!query || `${post.name}\n${post.handle}\n${post.translation}\n${post.original}`.toLocaleLowerCase().includes(query));
 }
 function firstDay(month) { return data.find(p => p.month === month && matches(p,false))?.date.slice(0,10) || month+'-01'; }
@@ -75,7 +97,7 @@ function renderMonthNav() {
   const choices = mobile ? [...new Set([...months,selected])].sort() : Array.from({length:12},(_,i) => `${year}-${String(i+1).padStart(2,'0')}`);
   $('months').replaceChildren();
   for(const month of choices) {
-    const count = data.filter(p => p.month === month && (!$('member').value || p.handle === $('member').value)).length;
+    const count = data.filter(p => p.month === month && (!selectedMember || p.handle === selectedMember)).length;
     const button = node('button','month-button'+(month === selected && mode !== 'all'?' active':''),mobile?`${month.slice(0,4)}.${Number(month.slice(5))}`:`${Number(month.slice(5))}월`);
     button.type = 'button'; button.setAttribute('aria-current',month === selected && mode !== 'all'?'date':'false'); button.setAttribute('aria-label',`${monthTitle(month)}, 번역 ${count}개`);
     button.append(node('span','',`${count}개`)); button.addEventListener('click',() => setMonth(month,true)); $('months').append(button);
@@ -87,7 +109,7 @@ function renderCalendar() {
   const offset = new Date(calendarMonth+'-01T00:00:00Z').getUTCDay();
   const lastDay = new Date(shiftMonth(calendarMonth,1)+'-01T00:00:00Z'); lastDay.setUTCDate(0);
   const counts = new Map();
-  for(const post of data) if(post.month === calendarMonth && (!$('member').value || post.handle === $('member').value)) { const day = post.date.slice(0,10); counts.set(day,(counts.get(day)||0)+1); }
+  for(const post of data) if(post.month === calendarMonth && (!selectedMember || post.handle === selectedMember)) { const day = post.date.slice(0,10); counts.set(day,(counts.get(day)||0)+1); }
   for(let i = 0; i < offset; i++) { const blank = node('span','calendar-blank'); blank.setAttribute('aria-hidden','true'); $('calendar-days').append(blank); }
   for(let i = 1; i <= lastDay.getUTCDate(); i++) {
     const day = `${calendarMonth}-${String(i).padStart(2,'0')}`; const count = counts.get(day)||0;
@@ -126,7 +148,7 @@ function appendBatch(moveFocus = false) {
   if(moveFocus && firstNew) { firstNew.focus({preventScroll:true}); firstNew.scrollIntoView({block:'start',behavior:'instant'}); }
 }
 function render() {
-  renderMonthNav(); renderCalendar(); $('date-picker').value = selectedDay;
+  updateMemberPicker(); renderMonthNav(); renderCalendar(); $('date-picker').value = selectedDay;
   for(const value of ['month','day','all']) $(`view-${value}`).setAttribute('aria-pressed',String(mode === value));
   $('previous').disabled = mode === 'all'; $('next').disabled = mode === 'all';
   $('previous').setAttribute('aria-label',mode === 'day'?'이전 날짜':'이전 달'); $('next').setAttribute('aria-label',mode === 'day'?'다음 날짜':'다음 달');
@@ -142,14 +164,14 @@ function render() {
   $('posts').setAttribute('aria-busy','false');
   const url = new URL(location.href); url.search = ''; url.hash = ''; url.searchParams.set('month',selected);
   if(mode !== 'month') url.searchParams.set('mode',mode); if(mode === 'day') url.searchParams.set('date',selectedDay);
-  if($('member').value) url.searchParams.set('member',$('member').value); if($('search').value.trim()) url.searchParams.set('q',$('search').value.trim()); if($('sort').value === 'desc') url.searchParams.set('sort','desc');
+  if(selectedMember) url.searchParams.set('member',selectedMember); if($('search').value.trim()) url.searchParams.set('q',$('search').value.trim()); if($('sort').value === 'desc') url.searchParams.set('sort','desc');
   history.replaceState(null,'',url);
 }
 $('year').addEventListener('change',() => setMonth(`${$('year').value}-${selected.slice(5)}`,true));
 $('previous').addEventListener('click',() => mode === 'day'?setDay(shiftDay(selectedDay,-1),true):setMonth(shiftMonth(selected,-1),true));
 $('next').addEventListener('click',() => mode === 'day'?setDay(shiftDay(selectedDay,1),true):setMonth(shiftMonth(selected,1),true));
 for(const value of ['month','day','all']) $(`view-${value}`).addEventListener('click',() => setMode(value));
-for(const id of ['search','sort','member']) $(id).addEventListener(id === 'search'?'input':'change',render);
+for(const id of ['search','sort']) $(id).addEventListener(id === 'search'?'input':'change',render);
 $('date-picker').addEventListener('change',() => setDay($('date-picker').value));
 $('month-picker').addEventListener('change',() => setMonth($('month-picker').value));
 $('calendar-previous').addEventListener('click',() => { calendarMonth = shiftMonth(calendarMonth,-1); renderCalendar(); });
@@ -161,12 +183,14 @@ $('calendar-panel').addEventListener('keydown',event => { if(event.key === 'Esca
 $('calendar-days').addEventListener('keydown',event => { const step = {ArrowLeft:-1,ArrowRight:1,ArrowUp:-7,ArrowDown:7}[event.key]; if(!step || !event.target.dataset.date) return; event.preventDefault(); const day = shiftDay(event.target.dataset.date,step); if(day.slice(0,7) !== calendarMonth) { calendarMonth = day.slice(0,7); renderCalendar(); } $('calendar-days').querySelector(`[data-date="${day}"]`)?.focus(); });
 $('more').addEventListener('click',() => appendBatch(true));
 $('continue-month').addEventListener('click',() => mode === 'day'?setDay(continuation,true):setMonth(continuation,true));
-$('start-reading').addEventListener('click',() => { $('sort').value = 'asc'; $('search').value = ''; $('member').value = ''; setMonth(months[0],true); });
+$('start-reading').addEventListener('click',() => { $('sort').value = 'asc'; $('search').value = ''; selectedMember = ''; setMonth(months[0],true); });
 window.matchMedia('(max-width:640px)').addEventListener('change',() => { if(data.length) renderMonthNav(); });
 fetch('data.json').then(response => { if(!response.ok) throw Error('data'); return response.json(); }).then(posts => {
   data = posts.sort((a,b) => a.date.localeCompare(b.date) || (BigInt(a.id) < BigInt(b.id)?-1:BigInt(a.id) > BigInt(b.id)?1:0)); months = [...new Set(data.map(p => p.month))].sort(); if(!months.length) throw Error('empty');
-  for(const member of [...new Map(data.map(p => [p.handle,p])).values()].sort((a,b) => a.name.localeCompare(b.name,'ko'))) { const option = node('option','',member.name); option.value = member.handle; $('member').append(option); }
-  if(data.some(p => p.handle === params.get('member'))) $('member').value = params.get('member');
+  const order = ['POLKA','MAI','AKIRA','HANABI','YUKURI','MIRACLE','SHION','AURORA','NORIKO','MIDORI'];
+  members = [...new Map(data.map(p => [p.handle,p])).values()].sort((a,b) => order.indexOf(a.character)-order.indexOf(b.character));
+  buildMemberPicker();
+  if(data.some(p => p.handle === params.get('member'))) selectedMember = params.get('member');
   mode = ['day','all'].includes(params.get('mode'))?params.get('mode'):params.get('all') === '1'?'all':'month';
   selected = validMonth(params.get('month'))?params.get('month'):($('sort').value === 'desc'?months.at(-1):months[0]);
   selectedDay = validDay(params.get('date'))?params.get('date'):firstDay(selected); if(mode === 'day') selected = selectedDay.slice(0,7); calendarMonth = selected;
